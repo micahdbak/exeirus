@@ -71,3 +71,7 @@ Which would then be processed as:
 ```
 
 ``mkdoc`` will read every file in the source directory as a source file. Each file will be output to the destination directory with the same filename, but processed with respect to the key-value pairs defined in the configuration file.
+
+### The ``mkblog`` program
+
+The ``mkblog`` program reads a folder of post files and creates a static blog web-site with reference to HTML file 'skeletons'.

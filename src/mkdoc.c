@@ -233,6 +233,8 @@ int main(int argc, char **argv)
 			node->val[i++] = c;
 
 		node->val[i] = '\0';
+
+		printf("Got key %s with value \"%s\".\n", node->key, node->val);
 	}
 
 	// close the configuration file
@@ -289,6 +291,8 @@ int main(int argc, char **argv)
 
 				// read the key
 
+				i = 0;
+
 				do {
 					key[i++] = c;
 					c = getc(source);
@@ -330,8 +334,6 @@ int main(int argc, char **argv)
 	}
 
 	// clean up
-
-	printf("Cleaning up.\n");
 
 	closedir(srcDir);
 

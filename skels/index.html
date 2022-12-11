@@ -1,0 +1,41 @@
+<!doctype html>
+<html>
+<head>
+	<title>$BLOGTITLE$ - Index</title>
+	<link rel="stylesheet" href="$DOMAIN$/$BLOG$/static/blog.css">
+	<link rel="icon" type="image/png" href="$DOMAIN$/$BLOG$/static/wasp.png">
+</head>
+<body>
+	<div class="page">
+		<div class="header">
+			<p>Logged in as <i>$BLOGUSER$</i></p>
+			<img src="$DOMAIN$/$BLOG$/static/wasp.png">
+			<h1>$BLOGNAME$</h1>
+			<h2>$BLOGTAG$</h2>
+		</div>
+		<div class="listing">
+			<p>Welcome to <b>$BLOGNAME$</b>.<br>
+			   The following are available posts.</p>
+			<table>
+				<tr class="description">
+					<th>Title</th>
+					<th>Author</th>
+					<th>Date</th>
+					<th>Link</th>
+				</tr> #(
+				<tr>
+					<th><i>#t</i></th>
+					<th>By #a</th>
+					<th>Posted #d</th>
+					<th><a href="$DOMAIN$/$BLOG$/#f">Open Post</a></th>
+				</tr>#)
+			</table>
+		</div>
+		<div class="footer">
+			<img src="$DOMAIN$/$BLOG$/static/wasp.png">
+			<h1>$BLOGNAME$</h1>
+			<h2>$BLOGTAG$</h2>
+		</div>
+	</div>
+</body>
+</html>
