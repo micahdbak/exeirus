@@ -17,13 +17,16 @@ out:
 bdocs:
 	mkdir -p $(BDOCS)
 
+strgen: out
+	$(CC) $(CFLAGS) -o $(OUT)/strgen $(SRC)/strgen.c
+
 mkdoc: out
 	$(CC) $(CFLAGS) -o $(OUT)/mkdoc $(SRC)/mkdoc.c
 
 mkblog: out bdocs
 	$(CC) $(CFLAGS) -o $(OUT)/mkblog $(SRC)/mkblog.c
 
-tools: mkdoc mkblog
+tools: strgen mkdoc mkblog
 
 exeirus: tools
 	$(OUT)/mkblog -p $(POSTS) -d $(BDOCS) -s $(SKELS)/post.html -i $(SKELS)/index.html
