@@ -169,8 +169,8 @@ Here is some \(ifancy\)i \(btext\)b.
 Goodbye!
 ```
 
-Then ``mkdoc`` will gather that the title is "My First Post", the author is "Micah Baker", the date is "11 Dec 2022", and the content is the rest of the file.
-If we give ``mkdoc`` the following post skeleton file:
+Then ``mkblog`` will gather that the title is "My First Post", the author is "Micah Baker", the date is "11 Dec 2022", and the content is the rest of the file.
+If we give ``mkblog`` the following post skeleton file:
 
 ```html
 <!doctype html>
@@ -186,7 +186,7 @@ If we give ``mkdoc`` the following post skeleton file:
 </html>
 ```
 
-Then ``mkdoc`` will compile the post file with respect to the post skeleton file to create the following:
+Then ``mkblog`` will compile the post file with respect to the post skeleton file to create the following:
 
 ```html
 <!doctype html>
@@ -210,15 +210,15 @@ This is great and all, but how will the user keep track of all of these outputte
 This is where the index skeleton comes into play.
 The index skeleton file has the same escape sequences as the post skeleton file, minus ``#c`` which gives a post's content.
 The index skeleton file has two special escape sequences that must be used correctly.
-``mkdoc`` keeps track of every post that it has read and written
-After it has parsed every post, ``mkdoc`` creates the index file which lists every post it has read.
-``mkdoc`` does this by reading characters from the index skeleton, copying them to the output index file, until it reaches the escape character '#'.
+``mkblog`` keeps track of every post that it has read and written
+After it has parsed every post, ``mkblog`` creates the index file which lists every post it has read.
+``mkblog`` does this by reading characters from the index skeleton, copying them to the output index file, until it reaches the escape character '#'.
 The first escape sequence it should come across is ``#(``, which starts the post-listing skeleton.
-The post-listing skeleton will be repeated for every post that ``mkdoc`` has read, with respect to each post's information.
+The post-listing skeleton will be repeated for every post that ``mkblog`` has read, with respect to each post's information.
 The post-listing skeleton is terminated with ``#)``.
 Within a post-listing, each of the escape sequences that were defined for post skeletons can be used once more, except for ``#c`` which gives a post's content.
 
-For example, suppose that ``mkdoc`` has read the post previously defined.
+For example, suppose that ``mkblog`` has read the post previously defined.
 Let that post have the filename of ``post1``.
 Then suppose that we have another post with the filename of ``post2``, and it is defined as follows:
 
@@ -234,7 +234,7 @@ My First Post
 Micah Baker
 11 Dec 2022
 
-If we give ``mkdoc`` the following index skeleton file:
+If we give ``mkblog`` the following index skeleton file:
 
 ```html
 <!doctype html>
@@ -251,7 +251,7 @@ If we give ``mkdoc`` the following index skeleton file:
 </html>
 ```
 
-Then ``mkdoc`` will output the following index file with respect to the posts that it has read:
+Then ``mkblog`` will output the following index file with respect to the posts that it has read:
 
 ```html
 <!doctype html>
