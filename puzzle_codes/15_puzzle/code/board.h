@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <time.h>
 #include <vector>
+#include <string>
 
 #include "board.h"
 
@@ -35,7 +36,8 @@ public:
     bool is_solved ();          // States whether the board is solved
     bool equals (Board* x);     // Boards are equal when all of their elements are in the same places
 
-    void print_board ();
+    void print_board ();        // Prints the board in 2d form, used for console
+    std::string to_str ();   // Transforms the board to 1d string, used for saving
 
     // Returns vector of neighbors (0 moved in all directions if possible) that can exist
     std::vector<Board*> neighbors (); 

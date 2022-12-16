@@ -97,6 +97,9 @@ Board::Board () {
     // Since board is solved, distances are 0
     this->manhattan = 0;
     this->hamming = 0;
+
+    // Shuffle the board
+    this->shuffle ();
 }
 
 
@@ -123,17 +126,11 @@ Board::Board (int tiles_p[4][4]) {
             }
         }
     }
-
-    /*for (int i = 0; i < 4; i++) {
-        for (int j = 0; j < 4; j++)
-            printf("%d ", this->tiles[i][j]);
-        printf("\n");
-    }*/
 }
 
 
 void Board::shuffle () {
-    for (int i = 0; i < 200; i++) {
+    for (int i = 0; i < 100; i++) {
         int dir = rand() % 4;
         this->move (dir);
     }
@@ -173,6 +170,20 @@ void Board::print_board () {
             printf("%d ", this->tiles[i][j]);
         printf("\n");
     }
+}
+
+
+string Board::to_str () {
+    string brd_str = "";
+    for (int i = 0; i < 4; i++) {
+        for (int j = 0; j < 4; j++) {
+            brd_str += to_string(this->tiles[i][j]) + " ";
+        }
+    }
+
+    // Remove extra ' ' at the end
+    brd_str.pop_back();
+    return brd_str;
 }
 
 
