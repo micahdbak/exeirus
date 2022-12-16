@@ -28,8 +28,8 @@ mkblog: out bdocs
 
 tools: strgen mkdoc mkblog
 
-15_puzzle:
-	g++ -std=c++11 -o $(OUT)/15_puzzle $(SRC)/15_puzzle/main.cpp $(SRC)/15_puzzle/puzzle_solver.cpp $(SRC)/board.cpp
+15_puzzle: out
+	g++ -std=c++11 -o $(OUT)/15_puzzle $(SRC)/15_puzzle/main.cpp $(SRC)/15_puzzle/puzzle_solver.cpp $(SRC)/15_puzzle/board.cpp
 
 exeirus: tools
 	$(OUT)/mkblog -p $(POSTS) -d $(BDOCS) -s $(SKELS)/post.html -i $(SKELS)/index.html
