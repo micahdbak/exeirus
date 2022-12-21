@@ -1,7 +1,7 @@
 /*********************************************
  * mkblog:  Static blog factory for EXEIRUS. *
  * Author:  Micah Baker                      *
- * Date:    10/12/2022                       *
+ * Date:    20/12/2022                       *
  *********************************************/
 #include <stdio.h>
 #include <stdlib.h>
@@ -37,15 +37,200 @@
 #define URL_START     "<a href=\""
 #define URL_END       "\">Click Here</a>"
 
+// data regarding a list of posts
 struct post
 {
 	char title[TITLESIZE],
 	     author[AUTHORSIZE],
-	     date[DATESIZE],
 	     filename[PATHSIZE];
+	int id, day, month, year;
 	struct post *next;
 };
 
+/* Sorted tree of posts. The (lth) node of a given tree
+ * implies that that node's (post) has a lesser value
+ * compared to the tree's (post). Likewise with (gth),
+ * except the comparison is greater than. */
+struct tree
+{
+	/* (post) is a sorted list of posts posted on a certain
+	 * date. Individual posts here are sorted by post ids. */
+	struct post *post;
+	int value;
+	struct tree *lth, *gth;
+};
+
+// sorted list of groups of posts
+struct list
+{
+	struct post *post;
+	struct list *next, *prev;
+};
+
+/* Returns the "value" of a post, for sorting purposes.
+ * The value is determined by the date information of
+ * a given post. */
+int postValue(struct post *post)
+{
+	return (post->year * 10000) + (post->month * 100) + post->day;
+}
+
+/* Branch from a tree node (node) with respect to (post). */
+void branch(struct post *post, struct tree *node)
+{
+	struct post *pnode, *pnext;
+	int value;
+
+	value = postValue(post);
+
+	if (value < node->value)
+	// the value of this post is lesser than the value of this node
+	{
+		// create (lth) if it doesn't exist, branch if it does
+
+		if (node->lth == NULL)
+		{
+			node->lth = malloc(sizeof(struct tree));
+			node = node->lth;
+
+			node->post = malloc(sizeof(struct post));
+			memcpy(node->post, post, sizeof(struct post));
+			node->post->next = NULL;
+
+			node->value = value;
+			node->lth = NULL;
+			node->gth = NULL;
+		} else
+			branch(post, node->lth);
+	} else
+	if (value > node->value)
+	// the value of this post is greater than the value of this node
+	{
+		// create (gth) if it doesn't exist, branch if it does
+
+		if (node->gth == NULL)
+		{
+			node->gth = malloc(sizeof(struct tree));
+			node = node->gth;
+
+			node->post = malloc(sizeof(struct post));
+			memcpy(node->post, post, sizeof(struct post));
+			node->post->next = NULL;
+
+			node->value = value;
+			node->lth = NULL;
+			node->gth = NULL;
+		} else
+			branch(post, node->gth);
+	} else {
+	// the value of this post is equal to the value of this node
+		if (post->id < node->post->id)
+		{
+			pnode = malloc(sizeof(struct post));
+			memcpy(pnode, post, sizeof(struct post));
+
+			pnode->next = node->post;
+			node->post = pnode;
+		} else {
+			pnode = node->post;
+			pnext = pnode->next;
+
+			while (pnext != NULL && post->id > pnext->id)
+			{
+				pnode = pnext;
+				pnext = pnode->next;
+			}
+
+			pnode->next = malloc(sizeof(struct post));
+			pnode = pnode->next;
+
+			memcpy(pnode, post, sizeof(struct post));
+			pnode->next = pnext;
+		}
+	}
+}
+
+/* Pushes (post) into list (lnode). Create a list if (lnode) is NULL. */
+struct list *pushPost(struct post *post, struct list *lnode)
+{
+	struct list *lprev = NULL;
+
+	if (lnode == NULL)
+		lnode = malloc(sizeof(struct list));
+	else {
+		lnode->next = malloc(sizeof(struct list));
+		lprev = lnode;
+		lnode = lnode->next;
+	}
+
+	lnode->post = post;
+	lnode->next = NULL;
+	lnode->prev = lprev;
+
+	return lnode;
+}
+
+// parses tree (tnode) into list (lnode)
+struct list *pushTree(struct tree *tnode, struct list *lnode)
+{
+	if (tnode == NULL)
+		return lnode;
+
+	lnode = pushTree(tnode->lth, lnode);
+	lnode = pushPost(tnode->post, lnode);
+	lnode = pushTree(tnode->gth, lnode);
+
+	return lnode;
+}
+
+// frees a tree
+void freeTree(struct tree *node)
+{
+	if (node == NULL)
+		return;
+
+	freeTree(node->lth);
+	freeTree(node->gth);
+
+	free(node);
+}
+
+/* Returns a sorted and grouped list of posts with
+ * respect to the provided post list (node). */
+struct list *sortPosts(struct post *node)
+{
+	struct tree *root;
+	struct list *list;
+
+	// allocate the tree's root
+	root = malloc(sizeof(struct tree));
+
+	root->post = malloc(sizeof(struct post));
+
+	memcpy(root->post, node, sizeof(struct post));
+	root->post->next = NULL;
+
+	root->value = postValue(node);
+	root->lth = NULL;
+	root->gth = NULL;
+
+	node = node->next;
+
+	// sort each post into the tree
+	for (; node != NULL; node = node->next)
+		branch(node, root);
+
+	list = pushTree(root, NULL);
+
+	freeTree(root);
+
+	while (list->prev != NULL)
+		list = list->prev;
+
+	return list;
+}
+
+// reads a line from (file) into (arr)
 int readLine(char *arr, FILE *file)
 {
 	int c, i;
@@ -62,16 +247,31 @@ int readLine(char *arr, FILE *file)
 
 int main(int argc, char **argv)
 {
+	const char *month[12] = {
+		"January",
+		"February",
+		"March",
+		"April",
+		"May",
+		"June",
+		"July",
+		"August",
+		"September",
+		"October",
+		"November",
+		"December"
+	};
 	int i,
 	    c, doneContent, isStart,
-	    pos;
+	    lpos, ppos;
 	DIR *posts;
 	char postDir[PATHSIZE], destDir[PATHSIZE],
 	     path[PATHSIZE];
 	FILE *postSkel, *indexSkel,
 	     *post, *dest,
 	     *index;
-	struct post *list, *node;
+	struct post *listRaw, *pnode, *pnext;
+	struct list *list, *lnode, *lnext;
 	struct dirent *dirent;
 
 	// initialize needed variables
@@ -162,8 +362,8 @@ int main(int argc, char **argv)
 
 	printf("All OK.\n");
 
-	list = malloc(sizeof(struct post));
-	node = list;
+	listRaw = malloc(sizeof(struct post));
+	pnode = listRaw;
 
 	dirent = readdir(posts);
 
@@ -182,7 +382,7 @@ int main(int argc, char **argv)
 		}
 
 		// copy the file name to this node
-		strcpy(node->filename, dirent->d_name);
+		strcpy(pnode->filename, dirent->d_name);
 
 		// get the path to the post file
 		strcpy(path, postDir);
@@ -194,11 +394,12 @@ int main(int argc, char **argv)
 
 		// read the post's metadata
 
-		readLine(node->title, post);
-		readLine(node->author, post);
-		readLine(node->date, post);
+		readLine(pnode->title, post);
+		readLine(pnode->author, post);
+		fscanf(post, "%d %d %d %d\n", &pnode->id, &pnode->day, &pnode->month, &pnode->year);
 
-		printf("Got post file \"%s\"; title: \"%s\", author: %s, date: %s.\n", path, node->title, node->author, node->date);
+		printf("Got post file \"%s\"; title: \"%s\", author: %s, date: %d %s %d; id: %d\n",
+		       path, pnode->title, pnode->author, pnode->day, month[pnode->month - 1], pnode->year, pnode->id);
 
 		// prepare the post's destination file
 
@@ -230,24 +431,29 @@ int main(int argc, char **argv)
 				// switch for the next character
 				switch (getc(postSkel))
 				{
+				// post id
+				case 'i':
+					fprintf(dest, "%d", pnode->id);
+
+					break;	
 				// title
 				case 't':
-					fprintf(dest, "%s", node->title);
+					fprintf(dest, "%s", pnode->title);
 
 					break;
 				// author
 				case 'a':
-					fprintf(dest, "%s", node->author);
+					fprintf(dest, "%s", pnode->author);
 
 					break;
 				// date
 				case 'd':
-					fprintf(dest, "%s", node->date);
+					fprintf(dest, "%d %s %d", pnode->day, month[pnode->month - 1], pnode->year);
 
 					break;
 				// filename
 				case 'f':
-					fprintf(dest, "%s", node->filename);
+					fprintf(dest, "%s", pnode->filename);
 
 					break;
 				// content
@@ -380,13 +586,30 @@ int main(int argc, char **argv)
 
 		if (dirent != NULL)
 		{
-			node->next = malloc(sizeof(struct post));
-			node = node->next;
+			pnode->next = malloc(sizeof(struct post));
+			pnode = pnode->next;
 		} else
 			// break loop if there are no more posts
 			break;
 	}
  
+	list = sortPosts(listRaw);
+
+	// free (listRaw)
+	
+	pnode = listRaw;
+
+	for (; pnode != NULL; pnode = pnext)
+	{
+		pnext = pnode->next;
+		free(pnode);
+	}
+
+	lnode = list;
+	pnode = lnode->post;
+
+	printf("Sorted and grouped posts.\n");
+
 	// write the index file now that we have a post list
 
 	// open the destination index file
@@ -400,7 +623,7 @@ int main(int argc, char **argv)
 
 	c = getc(indexSkel);
 
-	for (node = list; c != EOF; c = getc(indexSkel))
+	for (; c != EOF; c = getc(indexSkel))
 	{
 		// check if [c] is the special character '#'
 		if (c == '#')
@@ -409,46 +632,84 @@ int main(int argc, char **argv)
 			
 			switch (c)
 			{
+			// start of group listing
+			case '{':
+				// remember this position
+				lpos = ftell(indexSkel);
+
+				break;
+			/* We have reached the end of a group listing.
+			 * If there is another group to be written, seek
+			 * the beginning of the group listing and write
+			 * again. */
+			case '}':
+				// get the next node
+				lnode = lnode->next;
+
+				// check if this node exists
+				if (lnode != NULL)
+				{
+					// go to the beginning of the group listing
+					fseek(indexSkel, lpos, SEEK_SET);
+
+					// set (pnode) to be the first post in (lnode)
+					pnode = lnode->post;
+				}
+
+				/* If (lnode) is NULL, then (indexSkel) will
+				 * continue being read from where it was. */
+
+				break;
 			// start of post listing
 			case '(':
 				// remember this position
-				pos = ftell(indexSkel);
+				ppos = ftell(indexSkel);
 
 				break;
-			/* We have reached the end of the post listing.
+			/* We have reached the end of a post listing.
 			 * If there is another post to be written, seek
 			 * the beginning of the post listing and write
 			 * again. */
 			case ')':
-				// set node to be the next post
-				node = node->next;
+				// set the post node to be the next node
+				pnode = pnode->next;
 
-				// check if this post exists
-				if (node != NULL)
-				{
+				if (pnode != NULL)
 					// go to the beginning of the post listing
-					fseek(indexSkel, pos, SEEK_SET);
-				}
+					fseek(indexSkel, ppos, SEEK_SET);
+
+				/* If (pnode) is NULL, then (indexSkel) will
+				 * continue being read from where it was. */
+
+				break;
+			// group date
+			case 'D':
+				fprintf(index, "%d %s %d", pnode->day, month[pnode->month - 1], pnode->year);
+
+				break;
+			// post id
+			case 'i':
+				fprintf(index, "%d", pnode->id);
 
 				break;
 			// title
 			case 't':
-				fprintf(index, "%s", node->title);
+				fprintf(index, "%s", pnode->title);
 
 				break;
 			// author
 			case 'a':
-				fprintf(index, "%s", node->author);
+				fprintf(index, "%s", pnode->author);
 
 				break;
 			// date
 			case 'd':
-				fprintf(index, "%s", node->date);
+				fprintf(index, "%d %s %d", pnode->day, month[pnode->month - 1], pnode->year);
 
 				break;
 			// filename
 			case 'f':
-				fprintf(index, "%s", node->filename);
+				fprintf(index, "%s", pnode->filename);
 
 				break;
 			// unknown character
@@ -466,16 +727,29 @@ int main(int argc, char **argv)
 
 	// clean up
 
+	printf("Cleaning up.\n");
+
 	closedir(posts);
 	fclose(postSkel);
 	fclose(indexSkel);
 	fclose(index);
 
-	// free the post list
-	for (; list != NULL; list = node)
+	// free the sorted and grouped post list
+
+	lnode = list;
+
+	for (; lnode != NULL; lnode = lnext)
 	{
-		node = list->next;
-		free(list);
+		lnext = lnode->next;
+		pnode = lnode->post;
+
+		for (; pnode != NULL; pnode = pnext)
+		{
+			pnext = pnode->next;
+			free(pnode);
+		}
+
+		free(lnode);
 	}
 
 	printf("All done.\n");

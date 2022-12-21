@@ -1,5 +1,7 @@
 # EXEIRUS
 
+## Description
+
 "This is a game. Complete it, and you will be rewarded.
 You will come accross a great many puzzles.
 By solving a puzzle, your solution will guide you to the next puzzle.
@@ -148,6 +150,7 @@ This post skeleton file is the file that dictates how every post is to look when
 Escape sequences using '#' tell ``mkblog`` where it should write parts of the post to the output file.
 For example,
 
+- ``#i``    writes the ID of the post,
 - ``#t``    writes the title of the post,
 - ``#a``    writes the author of the post,
 - ``#d``    writes the date of the post,
@@ -159,7 +162,7 @@ For example, suppose we have the following post:
 ```
 My First Post
 Micah Baker
-11 Dec 2022
+0 11 12 2022
 Hello, world!
 \P
 This is my very first post.
@@ -169,7 +172,7 @@ Here is some \(ifancy\)i \(btext\)b.
 Goodbye!
 ```
 
-Then ``mkblog`` will gather that the title is "My First Post", the author is "Micah Baker", the date is "11 Dec 2022", and the content is the rest of the file.
+Then ``mkblog`` will gather that the title is "My First Post", the author is "Micah Baker", the post ID is "0", the date is "11 12 2022", that is, 11 Dec 2022, and the content is the rest of the file.
 If we give ``mkblog`` the following post skeleton file:
 
 ```html
@@ -180,8 +183,9 @@ If we give ``mkblog`` the following post skeleton file:
 </head>
 <body>
     <h1>#t</h1>
-    <h2>By #a, on #d</h2>
-    <p>#c</p>
+    <h2>By #a</h2>
+    <h3>(#i) #d</h3>
+<p>#c</p>
 </body>
 </html>
 ```
@@ -196,8 +200,9 @@ Then ``mkblog`` will compile the post file with respect to the post skeleton fil
 </head>
 <body>
     <h1>My First Post</h1>
-    <h2>By Micah Baker, on 11 Dec 2022</h2>
-    <p>Hello, world!</p>
+    <h2>By Micah Baker<h2>
+    <h3>(0) 11 December 2022</h3>
+<p>Hello, world!</p>
 <p>This is my very first post.
 I do hope that you like it!
 Here is some <i>fancy</i> <b>text</b>.</p>
@@ -208,15 +213,28 @@ Here is some <i>fancy</i> <b>text</b>.</p>
 
 This is great and all, but how will the user keep track of all of these outputted files?
 This is where the index skeleton comes into play.
-The index skeleton file has the same escape sequences as the post skeleton file, minus ``#c`` which gives a post's content.
-The index skeleton file has two special escape sequences that must be used correctly.
-``mkblog`` keeps track of every post that it has read and written
-After it has parsed every post, ``mkblog`` creates the index file which lists every post it has read.
+The index skeleton file has the same escape sequences as the post skeleton file, minus ``#c`` which gives a post's content,
+and additionally, the ``#D`` escape sequence which dictates the date of a *group* of posts.
+The index skeleton file has four special escape sequences that must be used correctly.
+``mkblog`` keeps track of every post that it has read and written.
+Then, after it has parsed every post, ``mkblog`` creates the index file which lists every post it has read.
 ``mkblog`` does this by reading characters from the index skeleton, copying them to the output index file, until it reaches the escape character '#'.
-The first escape sequence it should come across is ``#(``, which starts the post-listing skeleton.
-The post-listing skeleton will be repeated for every post that ``mkblog`` has read, with respect to each post's information.
-The post-listing skeleton is terminated with ``#)``.
-Within a post-listing, each of the escape sequences that were defined for post skeletons can be used once more, except for ``#c`` which gives a post's content.
+The first escape sequence it should come across is ``#{``, which starts the post-group skeleton.
+A post-group is a group of posts that were posted on the same date.
+These are created because ``mkblog`` automatically sorts the posts that it has read before it writes them to the index skeleton,
+and posts that were posted during the same date are grouped together.
+Within each group, posts are then sorted by order of their post IDs, mentioned above.
+Thus, the ordering of posts in the index file is dictated by their posted dates and post IDs.
+The post-group skeleton will be repeated for every post-group that ``mkblog`` has read.
+After a ``#{`` is read, it will write post-groups until a ``#}``, which dictates the end of the post-group skeleton.
+The ``#D`` escape sequence is available for these post-group skeletons,
+which dictates where ``mkblog`` should write the post-group's date information.
+Inside of a post-group skeleton, there should also be a ``#(`` (notice the change from curly braces to parenthesis),
+which starts a post-listing skeleton.
+A post-listing skeleton is the part of a post-group that denotes how an individual post should be printed.
+A post-listing skeleton is then terminated by a ``#)``.
+Within a post-listing skeleton, each of the escape sequences that were defined for post skeletons files can be used once more,
+except for ``#c`` which gives a post's content.
 
 For example, suppose that ``mkblog`` has read the post previously defined.
 Let that post have the filename of ``post1``.
@@ -225,14 +243,11 @@ Then suppose that we have another post with the filename of ``post2``, and it is
 ```
 My Second Post
 Micah Baker
-11 Dec 2022
+1 11 12 2022
 This is my second post.
 \P
 I don't have much more to say other than that!
 ```
-My First Post
-Micah Baker
-11 Dec 2022
 
 If we give ``mkblog`` the following index skeleton file:
 
@@ -244,9 +259,9 @@ If we give ``mkblog`` the following index skeleton file:
 </head>
 <body>
     <p>Welcome to My Blog.</p>
-    <p>The following are posts that are available.</p>
-#(
-    <p><b>#t</b> by #a on #d. <a href="$DOMAIN$/#f">View Post</a></p>#)
+    <p>The following are posts that are available.</p>#{
+    <p>Posted On #D:</p>#(
+    <p>(#i) <b>#t</b> by #a. <a href="$DOMAIN$/#f">View Post</a></p>#)#}
 </body>
 </html>
 ```
@@ -262,15 +277,16 @@ Then ``mkblog`` will output the following index file with respect to the posts t
 <body>
     <p>Welcome to My Blog.</p>
     <p>The following are posts that are available.</p>
-
-    <p><b>My First Post</b> by Micah Baker on 11 Dec 2022. <a href="$DOMAIN$/post1">View Post</a></p>
-    <p><b>My Second Post</b> by Micah Baker on 11 Dec 2022. <a href="$DOMAIN$/post2">View Post</a></p>
+    <p>Posted On 11 December 2022:</p>
+    <p>(0) <b>My First Post</b> by Micah Baker. <a href="$DOMAIN$/post1">View Post</a></p>
+    <p>(1) <b>My Second Post</b> by Micah Baker. <a href="$DOMAIN$/post2">View Post</a></p>
 </body>
 </html>
 ```
 
 Notice the reoccurence of ``$DOMAIN$`` from the index skeleton file to the output index file.
-This is because the output files from ``mkblog`` can be used as source files for the ``mkdoc`` program, which can ensure consistent writing of certain information, such as the domain name of the server that this blog is to run on.
+This is because the output files from ``mkblog`` can be used as source files for the ``mkdoc`` program,
+which can ensure consistent writing of certain information, such as the domain name of the server that this blog is to run on.
 
 #### Usage
 

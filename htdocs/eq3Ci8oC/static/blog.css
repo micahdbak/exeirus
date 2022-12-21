@@ -1,0 +1,110 @@
+body {
+	margin: 0px;
+	padding: 0px;
+	background-color: #101010;
+	color: white;
+}
+
+h1, h2, h3 {
+	font-weight: normal;
+}
+
+a {
+	color: #8080ff;
+}
+
+.page {
+	max-width: 768px;
+	margin: auto;
+	padding: 0px;
+}
+
+.header {
+	margin-top: 16px;
+	padding: 16px;
+	border: solid 1px #808080;
+	background-color: black;
+	color: white;
+	line-height: 0px;
+	font-weight: bold;
+}
+.header table {
+	width: 100%;
+}
+.header table th.icon {
+	width: 64px;
+	padding-right: 8px;
+}
+.header table th.icon img {
+	width: 100%;
+}
+.header p {
+	color: lightgray;
+	text-align: right;
+}
+.header h1 {
+	font-size: 24pt;
+	text-align: left;
+}
+.header h2 {
+	font-size: 12pt;
+	text-align: left;
+}
+
+.post {
+	padding: 32px;
+}
+.post h1 {
+	font-size: 16pt;
+}
+.post h2 {
+	font-size: 12pt;
+}
+.post h3 {
+	font-size: 12pt;
+	color: #808080;
+}
+.post .content {
+	border: solid 1px #808080;
+	padding: 16px;
+	background-color: black;
+}
+
+.listing {
+	padding: 32px;
+}
+.listing h1 {
+	font-size: 16pt;
+}
+.listing h2 {
+	font-size: 12pt;
+	color: #808080;
+}
+.listing .group {
+	margin-bottom: 16px;
+	border: solid 1px #404040;
+	padding: 16px;
+	background-color: #202020;
+	line-height: 0px;
+}
+.listing .group .post {
+	margin: 4px;
+	border: solid 1px #808080;
+	padding: 8px;
+	background-color: black;
+}
+
+.footer {
+	padding-top: 16px;
+	padding-bottom: 50vh;
+	color: white;
+	line-height: 0px;
+	font-weight: bold;
+	text-align: center;
+}
+.footer h1 {
+	font-size: 16pt;
+}
+.footer h2 {
+	font-size: 12pt;
+}

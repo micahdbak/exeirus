@@ -1,0 +1,40 @@
+<!doctype html>
+<html>
+<head>
+	<title>$BLOGTITLE$ - #t By #a</title>
+	<link rel="stylesheet" href="$DOMAIN$/$BLOG$/static/blog.css">
+	<link rel="icon" type="image/png" href="$DOMAIN$/$BLOG$/static/wasp.png">
+</head>
+<body>
+	<div class="page">
+		<div class="header">
+			<table>
+				<tr>
+					<th class="icon">
+						<img src="$DOMAIN$/$BLOG$/static/wasp.png">
+					</th>
+					<th>
+						<p>Logged in as <i>$BLOGUSER$</i></p>
+						<h1>$BLOGNAME$</h1>
+						<h2>$BLOGTAG$</h2>
+					</th>
+				</tr>
+			</table>
+		</div>
+		<div class="listing">
+			<h1>The following are available posts.</h1>
+			<h2>Sort Mode: Oldest To Newest</h2>#{
+			<div class="group">
+				<p>Posted On #D</p>#(
+				<div class="post">
+					<p>(#i) <i>#t</i> by <b>Hacker #a</b>. <a href="$DOMAIN$/$BLOG$/#f">Open Post</a></p>
+				</div>#)
+			</div>#}
+		</div>
+		<div class="footer">
+			<h1>$BLOGNAME$</h1>
+			<h2>$BLOGTAG$</h2>
+		</div>
+	</div>
+</body>
+</html>

@@ -8,30 +8,34 @@
 <body>
 	<div class="page">
 		<div class="header">
-			<p>Logged in as <i>$BLOGUSER$</i></p>
-			<img src="$DOMAIN$/$BLOG$/static/wasp.png">
-			<h1>$BLOGNAME$</h1>
-			<h2>$BLOGTAG$</h2>
-		</div>
-		<div class="content">
-			<p><a href="$DOMAIN$/$BLOG$/index.html">View Index of Posts</a></p>
 			<table>
 				<tr>
-					<th class="left">
-						<h2><i>#t</i></h2>
+					<th class="icon">
+						<img src="$DOMAIN$/$BLOG$/static/wasp.png">
 					</th>
-					<th class="right">
-						<p>By #a</p>
-						<p>Posted #d</p>
+					<th>
+						<p>Logged in as <i>$BLOGUSER$</i></p>
+						<h1>$BLOGNAME$</h1>
+						<h2>$BLOGTAG$</h2>
 					</th>
 				</tr>
 			</table>
+		</div>
+		<div class="post">
+			<p><a href="$DOMAIN$/$BLOG$/index.html">View Index of Posts</a></p>
+			<h1><i>#t</i></h1>
+			<h2>By Hacker #a</h2>
+			<h3>Posted On #d (#i)</h3>
+			<div class="content">
 <p>
 #c
 </p>
+<p>
+Hacker #a
+</p>
+			</div>
 		</div>
 		<div class="footer">
-			<img src="$DOMAIN$/$BLOG$/static/wasp.png">
 			<h1>$BLOGNAME$</h1>
 			<h2>$BLOGTAG$</h2>
 		</div>

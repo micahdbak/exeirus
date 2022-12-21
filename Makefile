@@ -3,12 +3,12 @@ CFLAGS = -O2
 OUT = ./bin
 SRC = ./src
 
-POSTS = ./posts
-BDOCS = ./bdocs
-SKELS = ./skels
+POSTS = ./blog/posts
+BDOCS = ./blog/docs
+SKELS = ./blog/skels
 CONFIG = ./mkdoc.vars
 HTDOCS = ./htdocs
-BLOG = ./htdocs/blog
+BLOG = ./htdocs/eq3Ci8oC
 DOCS = ./docs
 
 out:
@@ -31,7 +31,9 @@ tools: strgen mkdoc mkblog
 15_puzzle: out
 	g++ -std=c++11 -o $(OUT)/15_puzzle $(SRC)/15_puzzle/main.cpp $(SRC)/15_puzzle/puzzle_solver.cpp $(SRC)/15_puzzle/board.cpp
 
-exeirus: tools
+blog: mkblog bdocs
 	$(OUT)/mkblog -p $(POSTS) -d $(BDOCS) -s $(SKELS)/post.html -i $(SKELS)/index.html
+
+exeirus: tools blog
 	$(OUT)/mkdoc -c $(CONFIG) -s $(BDOCS) -d $(BLOG)
 	$(OUT)/mkdoc -c $(CONFIG) -s $(DOCS) -d $(HTDOCS)
