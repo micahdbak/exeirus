@@ -110,6 +110,18 @@ int Solver::get_moves () {
 }
 
 
+string Solver::key_step () {
+    int step = rand () % (this->moves - 1) + 1;  // To avoid the key being initial solution we start from 1
+    // Find the randomly selected step
+    Game_Node* current = this->head;
+    for (int i = 0; i < step; i++) {
+        current = current->next;
+    }
+    // 1d representation of that step is the key
+    return current->brd->to_str ();
+}
+
+
 void Solver::print_solution () {
     printf("Solution:\n");
 

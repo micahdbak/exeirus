@@ -8,14 +8,15 @@
 
 using namespace std;
 
-
+// Saves information neeeded about the generated puzzle into .txt file
 void save_to_file (Solver* solv, Board* brd) {
     ofstream save_file;
     save_file.open(FILENAME);
 
     if (save_file.is_open()) {
-        save_file << solv->get_moves () << endl;
-        save_file << brd->to_str ();
+        save_file << solv->get_moves () << endl;  // Record number of moves to solve the puzzle
+        save_file << brd->to_str () << endl;      // Record initial state as 1d array
+        save_file << solv->key_step ();           // Record the key for user to use as 1d array
         save_file.close();
     }
     else {
@@ -31,6 +32,7 @@ int main () {
     Solver* solv;
     int moves;
 
+    // Generate the puzzle with required amount of moves to solve through trial and error
     while (true) {
         brd = new Board ();
         printf("\n");
@@ -41,6 +43,8 @@ int main () {
 
         if (moves >= MIN_MOVES && moves <= MAX_MOVES)
             break;
+        
+        delete solv;
     }
 
     cout << "Took " << moves << " moves to solve" << endl;
