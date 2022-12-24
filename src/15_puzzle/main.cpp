@@ -35,8 +35,8 @@ int main () {
     // Generate the puzzle with required amount of moves to solve through trial and error
     while (true) {
         brd = new Board ();
-        printf("\n");
-        brd->print_board ();
+        // printf("\n");
+        // brd->print_board ();
 
         solv = new Solver (brd);
         moves = solv->get_moves ();
@@ -47,12 +47,11 @@ int main () {
         delete solv;
     }
 
-    cout << "Took " << moves << " moves to solve" << endl;
-    cout << "To str rep: '" << brd->to_str () << "'" << endl;
+    // cout << "Took " << moves << " moves to solve" << endl;
+    // cout << "To str rep: '" << brd->to_str () << "'" << endl;
 
     save_to_file (solv, brd);
 
-    delete brd;
     delete solv;
 
     return 0;
