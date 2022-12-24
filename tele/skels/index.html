@@ -1,0 +1,46 @@
+<!doctype html>
+<html>
+<head>
+	<title>$TELETITLE$ - #t</title>
+	<link rel="stylesheet" href="$DOMAIN$/$TELE$/static/tele.css">
+	<link rel="icon" type="image/svg" href="$DOMAIN$/$TELE$/static/icon.svg">
+</head>
+<body>
+	<div class="page">
+		<table class="header">
+			<tr>
+				<th class="left">
+					<img style="height: 64px;" src="$DOMAIN$/$TELE$/static/title.svg">
+					<h1>$TELETAG$</h1>
+				</th>
+				<th class="right">
+					<img style="width: 48px;" src="$DOMAIN$/$TELE$/static/user.svg">
+					<h1>$TELEUSER$</h1>
+				</th>
+			</tr>
+		</table>
+		<div class="search">
+			<h1>Search Bar Disabled</h1>
+			<img style="width: 24px;" src="$DOMAIN$/$TELE$/static/search.svg">
+		</div>
+		<div class="listing">#{
+			<h1>Posted on #D</h1>#(
+			<div class="thumbnail">
+				<div class="video">
+					<a href="$DOMAIN$/$TELE$/#f">
+						<img style="width: 256px;" src="$DOMAIN$/$TELE$/thumbnails/#f.jpg">
+					</a>
+				</div>
+				<div class="about">
+					<div class="title">
+						<h1>#t</h1>
+					</div>
+					<div class="description">
+						<h1>By #a</h1>
+					</div>
+				</div>
+			</div>#)#}
+		</div>
+	</div>
+</body>
+</html>

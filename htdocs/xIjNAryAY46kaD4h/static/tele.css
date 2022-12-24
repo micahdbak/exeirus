@@ -1,0 +1,239 @@
+body {
+	overflow-x: hidden;
+	margin: 0px;
+	padding: 0px;
+	background-color: #e0e0e0;
+	color: black;
+	font-family: sans-serif;
+}
+.page {
+	width: 100%;
+	background-color: #f0f0f0;
+}
+
+table.header {
+	margin: 0px;
+	padding: 0px;
+	width: 100%;
+	background-color: white;
+	line-height: 100%;
+}
+table.header tr, th {
+	margin: 0px;
+	padding: 0px;
+}
+table.header th.left {
+	display: table;
+	padding: 16px;
+	text-align: left;
+}
+table.header th.left h1 {
+	display: table-cell;
+	vertical-align: middle;
+	font-size: 16pt;
+}
+table.header th.left img {
+	display: table-cell;
+	vertical-align: middle;
+	float: left;
+	margin-right: 16px;
+}
+table.header th.right {
+	padding: 16px;
+	width: 240px;
+	background-color: #e0e0e0;
+	color: #808080;
+	text-align: right;
+}
+table.header th.right h1 {
+	font-size: 16pt;
+}
+table.header th.right img {
+	border: 1px solid #808080;
+	float: right;
+	margin-left: 16px;
+}
+
+.search {
+	margin: auto;
+	margin-top: 8px;
+	margin-bottom: 8px;
+	padding: 8px;
+	border: 1px solid #808080;
+	width: 512px;
+	height: 24px;
+	background-color: #d0d0d0;
+	line-height: 0;
+}
+.search h1 {
+	float: left;
+	font-weight: normal;
+	font-size: 12pt;
+	color: #808080;
+}
+.search img {
+	float: right;
+}
+
+table.content {
+	overflow: scroll;
+	margin: auto;
+	border-top: 1px solid #d0d0d0;
+	width: 1280px;
+	background-color: #f0f0f0;
+	text-align: left;
+}
+table.content th.left {
+	vertical-align: top;
+	width: 768px;
+}
+table.content th.left .video {
+	margin: 0px;
+	padding: 0px;
+	width: 768px;
+	height: 432px;
+	background-color: #808080;
+}
+table.content th.left .about {
+	padding: 8px;
+	padding-left: 16px;
+	background-color: white;
+}
+table.content th.left .about h1 {
+	font-size: 20pt;
+}
+table.content th.left .about .author img {
+	float: left;
+	border: 1px solid #808080;
+	margin-right: 8px;
+}
+table.content th.left .about .author h1 {
+	font-size: 16pt;
+	font-weight: normal;
+}
+table.content th.left .about .author span.subscribe {
+	border: 1px solid black;
+	border-radius: 8px;
+	padding: 4px;
+	background-color: red;
+	color: white;
+}
+table.content th.left .about .author span.subscribe:hover {
+	border: 1px solid #808080;
+	background-color: #ff8080;
+}
+table.content th.left .about .description {
+	border-top: 1px solid #e0e0e0;
+	padding: 16px;
+	background-color: #f0f0f0;
+	color: #404040;
+}
+table.content th.left .about .description h1 {
+	font-size: 16pt;
+	font-weight: normal;
+}
+table.content th.left .about .description h2 {
+	font-size: 12pt;
+	font-weight: normal;
+}
+table.content th.left .about .description p {
+	color: #808080;
+	font-size: 12pt;
+	font-weight: normal;
+}
+table.content th.left .about .comments h1 {
+	color: #808080;
+	font-size: 16pt;
+	font-weight: normal;
+}
+table.content th.right {
+	vertical-align: top;
+}
+table.content th.right h1 {
+	margin-left: 16px;
+	color: #808080;
+	font-size: 16pt;
+	font-weight: normal;
+}
+table.content th.right .thumbnail {
+	border-bottom: 1px solid #d0d0d0;
+	padding: 16px;
+	height: 144px;
+	background-color: #e0e0e0;
+}
+table.content th.right .thumbnail .video {
+	display: block;
+	float: left;
+	width: 256px;
+	height: 144px;
+	background-color: #d0d0d0;
+}
+table.content th.right .thumbnail .about {
+	display: block;
+	float: right;
+	width: 208px;
+	height: 100%;
+}
+table.content th.right .thumbnail .about .title {
+	width: 100%;
+	height: 24px;
+	margin-bottom: 4px;
+	background-color: #d0d0d0;
+}
+table.content th.right .thumbnail .about .description {
+	width: 100%;
+	height: 64px;
+	background-color: #d0d0d0;
+}
+
+.listing {
+	margin: auto;
+	padding: 64px;
+	width: 576px;
+}
+.listing h1 {
+	color: #808080;
+	font-size: 16pt;
+	font-weight: normal;
+}
+.listing .thumbnail {
+	border: 1px solid #e0e0e0;
+	border-bottom: 1px solid #d0d0d0;
+	padding: 16px;
+	width: 512px;
+	height: 144px;
+	background-color: #f8f8f8;
+}
+.listing .thumbnail:hover {
+	background-color: white;
+}
+.listing .thumbnail .video {
+	display: block;
+	float: left;
+	width: 256px;
+	height: 144px;
+	background-color: #d0d0d0;
+}
+.listing .thumbnail .about {
+	display: block;
+	float: right;
+	width: 256px;
+	height: 100%;
+}
+.listing .thumbnail .about .title {
+	margin-bottom: 4px;
+	padding-left: 8px;
+}
+.listing .thumbnail .about .title h1 {
+	color: black;
+	font-size: 14pt;
+	font-weight: normal;
+}
+.listing .thumbnail .about .description {
+	padding-left: 16px;
+}
+.listing .thumbnail .about .description h1 {
+	color: #404040;
+	font-size: 12pt;
+	font-weight: normal;
+}
