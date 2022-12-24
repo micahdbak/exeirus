@@ -140,6 +140,10 @@ The following describes the different escape sequences for text effects:
 - ``\)u``   end underlined text
 - ``\(m``   start monospace text
 - ``\)m``   end monospace text
+- ``\(L``   start large text
+- ``\)L``   end large text
+- ``\(S``   start small text
+- ``\)S``   end small text
 - ``\(a``   start hyperlink
 - ``\)a``   end hyperlink
 

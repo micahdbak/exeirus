@@ -31,8 +31,14 @@
 #define UNDER_START   "<u>"
 #define UNDER_END     "</u>"
 
-#define MONO_START    "<span style=\"font-family: monospace;\">"
+#define MONO_START    "<span class=\"monospace\" style=\"font-family: monospace;\">"
 #define MONO_END      "</span>"
+
+#define LARGE_START   "<span style=\"font-size: 16pt\">"
+#define LARGE_END     "</span>"
+
+#define SMALL_START   "<span style=\"font-size: 10pt\">"
+#define SMALL_END     "</span>"
 
 #define URL_START     "<a href=\""
 #define URL_END       "\">Click Here</a>"
@@ -544,6 +550,18 @@ int main(int argc, char **argv)
 							case 'm':
 								if (isStart)  fprintf(dest, MONO_START);
 								else          fprintf(dest, MONO_END);
+
+								break;
+							// large text
+							case 'L':
+								if (isStart)  fprintf(dest, LARGE_START);
+								else          fprintf(dest, LARGE_END);
+
+								break;
+							// small text
+							case 'S':
+								if (isStart)  fprintf(dest, SMALL_START);
+								else          fprintf(dest, SMALL_END);
 
 								break;
 							// URL
