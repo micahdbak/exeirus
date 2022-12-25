@@ -17,15 +17,100 @@ Finding this completion page ends the game, and thus whoever gets there first is
 
 ## Installing
 
-Several programs assist in the repetitive aspects of this project.
+There are two servers that the EXEIRUS ARG is made up of.
+There is a static HTML server which is dedicated to the EXEIRUS hackers,
+and there is a Python flask server which is dedicated to the CICADA hackers.
 
-To compile all of these programs, simply run ``make tools``.
-The executables of these tools will now be in ``bin`` for later use.
+### The Static Server
 
-To compile the HTML file tree of EXEIRUS, run ``make exeirus``.
-The file tree will now be present under the ``htdocs`` folder.
+There are no dependencies for compiling the static server,
+except a C compiler, and, of course, the standard C library.
+This is because specially written C programs assist in the repetitive aspects of the static server,
+such as generating templated websites (``mkblog``), or replacing variable fields (``mkdoc``).
+Additionally, there is a handy program which generates a random string of a specified length and specified base (``strgen``).
 
-## Tools
+To create the static HTML file tree, simply run
+
+```
+make static_server
+```
+
+The previously mentioned programs will be compiled and written to ``static_server/bin`` for further use.
+
+### The Flask Server
+
+#### Dependencies
+
+To install and run the Flask server, you will need to install Flask.
+To do this, ensure that Python, the Python ``venv`` module, and the Python ``pip`` package-manager are installed.
+
+The ``venv`` module is used to create a virtual-environment where all dependencies will be stored.
+
+The ``pip`` package-manager is used to install Flask.
+
+To install these in Ubuntu:
+
+```
+apt-get install python3 python3-pip python3-venv
+```
+
+To install these in MacOS (using Homebrew):
+
+```
+brew install python3 python3-pip python3-venv
+```
+
+Once Python, ``pip``, and ``venv`` are installed, you must create the virtual environment where we will store Flask.
+
+To do this, ``cd`` into ``flask_server``, and create the virtual-environment:
+
+```
+cd ./flask_server
+python3 -m venv ./venv
+```
+
+This will create a folder in ``flask_server`` called ``venv`` that will store Flask.
+
+Then, enter this virtual environment:
+
+```
+. ./venv/bin/activate
+```
+
+Your shell prompt should look a little different now.
+
+Next, we can install Flask:
+
+```
+pip install Flask
+```
+
+Now, all of the dependencies for running the flask server are installed.
+Whenever you intend to work on the flask server, you should enter the virtual environment.
+
+To leave the virtual environment, simply type ``deactivate`` into your shell:
+
+```
+deactivate
+```
+
+#### Running (Development Mode)
+
+To run the flask server, enter the created virtual environment.
+
+From the virtual environment, and ``cd``'d into ``flask_server``, start the server in development mode:
+
+```
+flask --debug --app server run
+```
+
+The server should be viewable at ``localhost:5000``.
+
+#### Running (Deployment)
+
+Working on this!
+
+## Static Server Programs
 
 ### The ``mkdoc`` program
 
@@ -33,7 +118,7 @@ The file tree will now be present under the ``htdocs`` folder.
 
 The ``mkdoc`` program reads HTML files (or really any file), replacing certain fields with constant variables.
 
-This is an important program if, per-say, you intend to install EXEIRUS on a web-server with a domain-name other than mine.
+This is an important program if you intend to install EXEIRUS on a web-server with a domain-name other than mine.
 In this case, without ``mkdoc``, the static HTML files created for the purpose of running on my server will not work properly on yours.
 You would need to change every occurrence of my domain in every file, which would be tedious.
 Instead, ``mkdoc`` looks to a configuration file that defines the domain that this server is to run on.
@@ -300,6 +385,8 @@ These can be provided to ``mkblog`` by the following command:
 
 ``mkblog -p [posts-directory] -d [destination-directory] -s [post-skeleton] -i [index-skeleton]``
 
+## Flask Server Programs
+
 ### 15 Puzzle
 
 #### Description
@@ -337,8 +424,6 @@ int main () {
     return 0;
 }
 ```
-
-#### API (for users):
 
 Board:
 	``void shuffle ()``            - shuffles the board
