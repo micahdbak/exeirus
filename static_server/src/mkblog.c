@@ -14,6 +14,8 @@
 
 #define PATHSIZE  128
 
+#define DEST_EXT  ".html"
+
 // blog-script definitions
 
 #define LINE_BREAK    "<br>"
@@ -413,6 +415,7 @@ int main(int argc, char **argv)
 		strcpy(path, destDir);
 		strcat(path, "/");
 		strcat(path, dirent->d_name);
+		strcat(path, DEST_EXT);
 
 		printf("Writing to destination file \"%s\".\n", path);
 
