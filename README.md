@@ -302,26 +302,29 @@ Here is some <i>fancy</i> <b>text</b>.</p>
 
 This is great and all, but how will the user keep track of all of these outputted files?
 This is where the index skeleton comes into play.
-The index skeleton file has the same escape sequences as the post skeleton file, minus ``#c`` which gives a post's content,
-and additionally, the ``#D`` escape sequence which dictates the date of a *group* of posts.
+
+The index skeleton file has the same escape sequences as the post skeleton file, minus ``#c`` which gives a post's content.
 The index skeleton file has four special escape sequences that must be used correctly.
 ``mkblog`` keeps track of every post that it has read and written.
 Then, after it has parsed every post, ``mkblog`` creates the index file which lists every post it has read.
 ``mkblog`` does this by reading characters from the index skeleton, copying them to the output index file, until it reaches the escape character '#'.
 The first escape sequence it should come across is ``#{``, which starts the post-group skeleton.
+
 A post-group is a group of posts that were posted on the same date.
 These are created because ``mkblog`` automatically sorts the posts that it has read before it writes them to the index skeleton,
 and posts that were posted during the same date are grouped together.
 Within each group, posts are then sorted by order of their post IDs, mentioned above.
 Thus, the ordering of posts in the index file is dictated by their posted dates and post IDs.
+
 The post-group skeleton will be repeated for every post-group that ``mkblog`` has read.
-After a ``#{`` is read, it will write post-groups until a ``#}``, which dictates the end of the post-group skeleton.
+After a ``#{`` is read, it will write a post-group until a ``#}`` is read, which dictates the end of the post-group skeleton.
 The ``#D`` escape sequence is available for these post-group skeletons,
 which dictates where ``mkblog`` should write the post-group's date information.
-Inside of a post-group skeleton, there should also be a ``#(`` (notice the change from curly braces to parenthesis),
+
+Inside of a post-group skeleton, there the ``#(`` escape sequence (notice the change from curly braces to parenthesis),
 which starts a post-listing skeleton.
 A post-listing skeleton is the part of a post-group that denotes how an individual post should be printed.
-A post-listing skeleton is then terminated by a ``#)``.
+A post-listing skeleton is then terminated by ``#)``.
 Within a post-listing skeleton, each of the escape sequences that were defined for post skeletons files can be used once more,
 except for ``#c`` which gives a post's content.
 
