@@ -7,40 +7,38 @@
 </head>
 <body>
 	<div class="page">
-		<table class="header">
-			<tr>
-				<th class="left">
-					<img style="height: 64px;" src="$DOMAIN$/$TELE$/static/title.svg">
-					<h1>$TELETAG$</h1>
-				</th>
-				<th class="right">
-					<img style="width: 48px;" src="$DOMAIN$/$TELE$/static/user.svg">
-					<h1>$TELEUSER$</h1>
-				</th>
-			</tr>
-		</table>
-		<div class="search">
-			<h1>Search Bar Disabled</h1>
-			<img style="width: 24px;" src="$DOMAIN$/$TELE$/static/search.svg">
-		</div>
-		<div class="listing">#{
-			<h1>Uploaded #D</h1>#(
-			<div class="thumbnail">
-				<div class="video">
-					<a href="$DOMAIN$/$TELE$/#f.html">
-						<img style="width: 256px;" src="$DOMAIN$/$TELE$/thumbnails/#f.jpg">
-					</a>
+		<div class="header">
+			<a href="$DOMAIN$/$TELE$/index.html">
+				<div class="home">
+					<img style="width: 24px;" src="$DOMAIN$/$TELE$/static/home.svg">
 				</div>
-				<div class="about">
-					<div class="title">
-						<h1>#t</h1>
+			</a>
+			<div class="title">
+				<img style="height: 48px;" src="$DOMAIN$/$TELE$/static/title.svg">
+			</div>
+			<div class="search">
+				<h1>Search Bar Disabled</h1>
+				<img style="width: 24px;" src="$DOMAIN$/$TELE$/static/search.svg">
+			</div>
+			<div class="user">
+				<img style="height: 48px;" src="$DOMAIN$/$TELE$/static/user.svg">
+				<h1>$TELEUSER$</h1>
+			</div>
+		</div>#{
+		<div class="listing">
+			<h1>Uploaded #D</h1>
+			<div class="group">#(
+				<a href="$DOMAIN$/$TELE$/#f.html">
+					<div class="thumbnail">
+						<img src="$DOMAIN$/$TELE$/thumbnails/#f.jpg">
+						<div class="about">
+							<h1>#t</h1>
+							<h2>By #a</h2>
+						</div>
 					</div>
-					<div class="description">
-						<h1>By #a</h1>
-					</div>
-				</div>
-			</div>#)#}
-		</div>
+				</a>#)
+			</div>
+		</div>#}
 	</div>
 </body>
 </html>

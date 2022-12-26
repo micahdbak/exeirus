@@ -2,83 +2,83 @@ body {
 	overflow-x: hidden;
 	margin: 0px;
 	padding: 0px;
-	background-color: #e0e0e0;
+	background-color: #f0f0f0;
 	color: black;
 	font-family: sans-serif;
 }
 .page {
+	padding-bottom: 50vh;
 	width: 100%;
 	background-color: #f0f0f0;
 }
 
-table.header {
-	margin: 0px;
-	padding: 0px;
+.header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	border-bottom: 1px solid #c0c0c0;
 	width: 100%;
-	background-color: white;
-	line-height: 100%;
+	background-color: #ffffff;
 }
-table.header tr, th {
-	margin: 0px;
-	padding: 0px;
-}
-table.header th.left {
-	display: table;
-	padding: 16px;
-	text-align: left;
-}
-table.header th.left h1 {
-	display: table-cell;
-	vertical-align: middle;
-	font-size: 16pt;
-}
-table.header th.left img {
-	display: table-cell;
-	vertical-align: middle;
-	float: left;
-	margin-right: 16px;
-}
-table.header th.right {
-	padding: 16px;
-	width: 240px;
-	background-color: #e0e0e0;
-	color: #808080;
-	text-align: right;
-}
-table.header th.right h1 {
-	font-size: 16pt;
-}
-table.header th.right img {
-	border: 1px solid #808080;
-	float: right;
+.header .home {
 	margin-left: 16px;
-}
-
-.search {
-	margin: auto;
-	margin-top: 8px;
-	margin-bottom: 8px;
+	margin-right: 16px;
+	border: 1px solid #e0e0e0;
+	border-radius: 16px;
 	padding: 8px;
-	border: 1px solid #808080;
+	background-color: #f0f0f0;
+}
+.header .home img {
+}
+.header .home:hover {
+	background-color: #ffffff;
+}
+.header .home:hover img {
+	opacity: 50%;
+}
+.header .search {
+	margin: auto;
+	padding: 8px;
+	border: 1px solid #c0c0c0;
 	width: 512px;
 	height: 24px;
-	background-color: #d0d0d0;
+	background-color: #e0e0e0;
 	line-height: 0;
 }
-.search h1 {
+.header .search h1 {
 	float: left;
 	font-weight: normal;
 	font-size: 12pt;
 	color: #808080;
 }
-.search img {
+.header .search img {
 	float: right;
 }
+.header .user {
+	padding: 8px;
+	padding-left: 16px;
+	background-color: #e0e0e0;
+	text-align: right;
+}
+.header .user h1 {
+	display: block;
+	float: left;
+	font-size: 12pt;
+	font-weight: bold;
+	line-height: 32px;
+	color: #808080;
+}
+.header .user img {
+	display: block;
+	float: right;
+	border: 1px solid #808080;
+	margin-left: 16px;
+}
+
 
 table.content {
 	overflow: scroll;
 	margin: auto;
-	border-top: 1px solid #d0d0d0;
 	width: 1280px;
 	background-color: #f0f0f0;
 	text-align: left;
@@ -112,15 +112,15 @@ table.content th.left .about .author h1 {
 	font-weight: normal;
 }
 table.content th.left .about .author span.subscribe {
-	border: 1px solid black;
+	border: 1px solid #404040;
 	border-radius: 8px;
 	padding: 4px;
-	background-color: red;
-	color: white;
-}
-table.content th.left .about .author span.subscribe:hover {
-	border: 1px solid #808080;
 	background-color: #ff8080;
+	color: #c0c0c0;
+}
+table.content th.left .about .author span.disabled {
+	font-size: 12pt;
+	color: #808080;
 }
 table.content th.left .about .description {
 	border-top: 1px solid #e0e0e0;
@@ -186,54 +186,66 @@ table.content th.right .thumbnail .about .description {
 	background-color: #d0d0d0;
 }
 
+
 .listing {
 	margin: auto;
-	padding: 64px;
-	width: 576px;
+	padding-top: 16px;
+	width: 1152px;
+	height: auto;
 }
 .listing h1 {
 	color: #808080;
 	font-size: 16pt;
 	font-weight: normal;
 }
-.listing .thumbnail {
-	border: 1px solid #e0e0e0;
-	border-bottom: 1px solid #d0d0d0;
-	padding: 16px;
-	width: 512px;
-	height: 144px;
+.listing a {
+	text-decoration: none;
+}
+.listing .group {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	justify-content: left;
+	align-items: center;
+	margin: auto;
+	border-radius: 4px;
+	width: 100%;
+	background-color: #e0e0e0;
+}
+.listing .group .thumbnail {
+	margin: 4px;
+	border: 1px solid #c0c0c0;
+	width: 374px;
 	background-color: #f8f8f8;
 }
-.listing .thumbnail:hover {
+.listing .group .thumbnail img {
+	width: 374px;
+	height: 210px;
+	background-color: #808080;
+}
+.listing .group .thumbnail:hover {
 	background-color: white;
 }
-.listing .thumbnail .video {
-	display: block;
-	float: left;
-	width: 256px;
-	height: 144px;
-	background-color: #d0d0d0;
+.listing .group .thumbnail:hover img {
+	opacity: 75%;
 }
-.listing .thumbnail .about {
-	display: block;
-	float: right;
-	width: 256px;
+.listing .group .thumbnail .about {
+	padding: 16px;
+	padding-top: 8px;
+	width: 100%;
 	height: 100%;
 }
-.listing .thumbnail .about .title {
-	margin-bottom: 4px;
-	padding-left: 8px;
-}
-.listing .thumbnail .about .title h1 {
+.listing .group .thumbnail .about h1 {
 	color: black;
+	text-align: left;
 	font-size: 14pt;
 	font-weight: normal;
+	line-height: 8px;
 }
-.listing .thumbnail .about .description {
-	padding-left: 16px;
-}
-.listing .thumbnail .about .description h1 {
+.listing .group .thumbnail .about h2 {
 	color: #404040;
+	text-align: left;
 	font-size: 12pt;
 	font-weight: normal;
+	line-height: 8px;
 }

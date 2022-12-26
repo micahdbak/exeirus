@@ -89,6 +89,10 @@ void branch(struct post *post, struct tree *node)
 	struct post *pnode, *pnext;
 	int value;
 
+	// negative post ID's are unlisted
+	if (post->id < 0)
+		return;
+
 	value = postValue(post);
 
 	if (value < node->value)
@@ -442,7 +446,10 @@ int main(int argc, char **argv)
 				{
 				// post id
 				case 'i':
-					fprintf(dest, "%d", pnode->id);
+					if (pnode->id < 0)
+						fprintf(dest, "unlisted");
+					else
+						fprintf(dest, "%d", pnode->id);
 
 					break;	
 				// title

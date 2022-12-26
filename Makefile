@@ -5,8 +5,8 @@ FLASK_SERVER  = ./flask_server
 STATIC_SERVER = ./static_server
 
 STATIC_HTDOCS = $(STATIC_SERVER)/htdocs
-STATIC_BLOG = $(STATIC_HTDOCS)/eq3Ci8oC
-STATIC_TELE = $(STATIC_HTDOCS)/xIjNAryAY46kaD4h
+STATIC_BLOG = $(STATIC_HTDOCS)/qSkRj46gsBnpIPP828sXW1iO-B0QDQfr
+STATIC_TELE = $(STATIC_HTDOCS)/noustele
 
 
 #
@@ -54,11 +54,6 @@ static_tele: mkblog mkdoc
 		-d $(STATIC_TELE)
 
 static_server: static_blog static_tele
-	# Parse remaining documents through mkdoc and write to htdocs
-	$(STATIC_SERVER)/bin/mkdoc \
-		-c $(STATIC_SERVER)/mkdoc.vars \
-		-s $(STATIC_SERVER)/docs \
-		-d $(STATIC_HTDOCS)
 
 
 #

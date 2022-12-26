@@ -13,6 +13,14 @@ a {
 	color: #8080ff;
 }
 
+span.monospace {
+	font-family: monospace;
+	color: lightgreen;
+}
+span.monospace b {
+	color: white;
+}
+
 .page {
 	max-width: 768px;
 	margin: auto;
@@ -53,6 +61,18 @@ a {
 
 .post {
 	padding: 32px;
+}
+.post p {
+	color: lightgray;
+}
+.post p s {
+	color: white;
+	font-family: monospace;
+	font-weight: bold;
+	text-decoration: none;
+}
+.post b {
+	color: white;
 }
 .post h1 {
 	font-size: 16pt;

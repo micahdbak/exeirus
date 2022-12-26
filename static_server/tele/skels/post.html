@@ -7,23 +7,23 @@
 </head>
 <body>
 	<div class="page">
-		<table class="header">
-			<tr>
-				<th class="left">
-					<a href="$DOMAIN$/$TELE$/index.html">
-						<img style="height: 64px;" src="$DOMAIN$/$TELE$/static/title.svg">
-					</a>
-					<h1>$TELETAG$</h1>
-				</th>
-				<th class="right">
-					<img style="width: 48px;" src="$DOMAIN$/$TELE$/static/user.svg">
-					<h1>$TELEUSER$</h1>
-				</th>
-			</tr>
-		</table>
-		<div class="search">
-			<h1>Search Bar Disabled</h1>
-			<img style="width: 24px;" src="$DOMAIN$/$TELE$/static/search.svg">
+		<div class="header">
+			<a href="$DOMAIN$/$TELE$/index.html">
+				<div class="home">
+					<img style="width: 24px;" src="$DOMAIN$/$TELE$/static/home.svg">
+				</div>
+			</a>
+			<div class="title">
+				<img style="height: 48px;" src="$DOMAIN$/$TELE$/static/title.svg">
+			</div>
+			<div class="search">
+				<h1>Search Bar Disabled</h1>
+				<img style="width: 24px;" src="$DOMAIN$/$TELE$/static/search.svg">
+			</div>
+			<div class="user">
+				<img style="height: 48px;" src="$DOMAIN$/$TELE$/static/user.svg">
+				<h1>$TELEUSER$</h1>
+			</div>
 		</div>
 		<table class="content">
 			<tr>
@@ -35,7 +35,11 @@
 						<h1>#t</h1>
 						<div class="author">
 							<img style="width: 32px;" src="$DOMAIN$/$TELE$/static/user.svg">
-							<h1>#a <span class="subscribe">Subscribe</span></h1>
+							<h1>
+								#a
+								<span class="subscribe">Subscribe</span>
+								<span class="disabled"><i>You must be logged in to subscribe.</i></span>
+							</h1>
 						</div>
 						<div class="description">
 							<h2>Uploaded #d</h2>

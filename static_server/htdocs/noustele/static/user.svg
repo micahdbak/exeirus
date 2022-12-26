@@ -3,10 +3,10 @@
 <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
 	 viewBox="0 0 32 32" style="enable-background:new 0 0 32 32;" xml:space="preserve">
 <style type="text/css">
-	.st0{fill:none;stroke:#808080;stroke-width:4;stroke-miterlimit:10;}
+	.st0{fill:#C0C0C0;}
+	.st1{fill:#F0F0F0;}
 </style>
-<g>
-	<line class="st0" x1="16" y1="16" x2="28.5" y2="28.5"/>
-</g>
-<circle class="st0" cx="12" cy="11" r="8"/>
+<rect class="st0" width="32" height="32"/>
+<path class="st1" d="M32,26.1V32H0v-5.9c2.9-2.6,6.5-4.5,10.5-5.5c-1.5-2.1-2.4-5-2.5-8.2c0-0.1,0-0.3,0-0.4c0-4.4,3.6-8,8-8
+	s8,3.6,8,8c0,0.1,0,0.3,0,0.4c-0.1,3.2-1,6.2-2.5,8.2C25.5,21.6,29.1,23.5,32,26.1z"/>
 </svg>
