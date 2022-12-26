@@ -17,6 +17,10 @@ strgen:
 	mkdir -p $(STATIC_SERVER)/bin	# Ensure that folder for binaries exists in STATIC_SERVER
 	$(CC) $(CFLAGS) -o $(STATIC_SERVER)/bin/strgen $(STATIC_SERVER)/src/strgen.c	# Compile strgen program
 
+strcon:
+	mkdir -p $(STATIC_SERVER)/bin	# Ensure that folder for binaries exists in STATIC_SERVER
+	$(CC) $(CFLAGS) -o $(STATIC_SERVER)/bin/strcon $(STATIC_SERVER)/src/strcon.c	# Compile strcon program
+
 mkdoc:
 	mkdir -p $(STATIC_SERVER)/bin	# Ensure that folder for binaries exists in STATIC_SERVER
 	$(CC) $(CFLAGS) -o $(STATIC_SERVER)/bin/mkdoc $(STATIC_SERVER)/src/mkdoc.c	# Compile mkdoc program

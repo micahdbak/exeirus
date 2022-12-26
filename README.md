@@ -112,6 +112,38 @@ Working on this!
 
 ## Static Server Programs
 
+### The ``strcon`` program
+
+A string encrypter/decrypter.
+
+Usage: ``strcon [mode] [input-text] [base] [cipher] ...``
+
+* ``[mode]``: ``[encrypt/decrypt]``
+    This lets the program know if it is to [encrypt] or [decrypt] the input-text.
+
+* ``[input-text]``
+    This is the text that strcon will work on.
+
+* ``[base]``: ``[binary/octal/decimal/hexadecimal]``
+    If the mode is [encrypt], then [base] refers to the numerical base of the output text.
+
+    If the mode is [decrypt], then [base] refers to the numerical base of the input text.
+    When decrypting, the output text will always be output as ASCII text.
+
+* ``[cipher]``: ``[none/caesar/vigenere]``
+	If [cipher] is set to [none], then no cipher will be applied to the [input-text],
+    and the argument-list can be terminated proceeding [none].
+
+	If [cipher] is set to [caesar], then a number must be provided specifying the shift value.
+
+	If [cipher] is set to [vigenere], then a string must be provided specifying the shift string.
+
+	Both of the additional arguments for [caesar] or [vigenere] ciphers must be provided directly following [cipher].
+
+	If the mode is [encrypt], then [caesar] will add [shift] to each character of [input-text].
+    Likewise, [vigenere] will add each character of [vigenere-text] to [input-text].
+	If the mode is [decrypt], then these ciphers will subtract instead of add.
+
 ### The ``mkdoc`` program
 
 #### Description
