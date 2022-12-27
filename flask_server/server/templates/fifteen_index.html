@@ -36,6 +36,9 @@ const orig_layout = {{ original_layout }};   // Initial board as 1d array
 var layout = [...orig_layout];
 var moves = orig_moves;
 
+// idiot check
+var idiot = to_str ();
+
 // Canvas element
 const canvas = document.getElementById("canvas");
 
@@ -124,10 +127,11 @@ function move (dir) {
 
 	// Reduce amount of moves left and draw new version of the board
 	moves -= 1;
-	// Since tiles have moved - check completion state and redraw them all
-	console.log(check_completion ());
-	draw_puzzle ();
-	console.log(blankX, " ", blankY);
+	// Add current step to "gay check"
+	idiot += to_str ();
+	// Since tiles have moved - check completion state that also redraws them
+	check_completion ();
+	
 }
 
 
@@ -135,7 +139,6 @@ function move (dir) {
 document.addEventListener("DOMContentLoaded", function () {
 	update_canvas ();
 	draw_puzzle ();
-	console.log(blankX, " ", blankY);
 });
 
 // Updates canvas position and size variables - to keep everything centered if user resizes the window
@@ -152,6 +155,8 @@ function update_canvas () {
 
 // Executes code once the window has been resized
 window.addEventListener("resize", function () {
+	if (solved) return;
+	
 	update_canvas ();
 	draw_puzzle ();
 });
@@ -159,23 +164,65 @@ window.addEventListener("resize", function () {
 // Checks if puzzle is solved
 function check_completion () {
 	for (var i = 0; i < 15; i++) {
-		if (layout[i] != i+1)
-			return -1;
+		if (layout[i] != i+1) {
+			draw_puzzle ();
+			return;
+		}
 	}
-
-	window.location.replace("{{ page }}");
-
-	solved = true;
-	return 0;
+	
+	const data = { left : moves, check : idiot };
+	
+	fetch("/fifteen", {
+		headers: {
+			'Content-Type' : 'application/json'
+		},
+		method : 'POST',
+		body : JSON.stringify (data),
+	})
+	.then (function (response) {
+		if (response.ok) {
+			response.json()
+			.then(function (response) {
+				if (response.state != "Declined") {
+					solved = true;
+					draw_puzzle (response.link);
+				}
+				else {
+					console.log("Try again, sweaty");
+					
+					layout = [...orig_layout];
+					moves = orig_moves;
+					idiot = to_str ();
+					for (var i = 0; i < 16; i++) {
+						if (layout[i] == 0) {
+							blank = i;
+							break;
+						}
+					}
+					
+					draw_puzzle ();
+				}
+				
+				window.open(response.link);
+			});
+		}
+		else {
+			console.log("Something's wrong, no idea what");
+		}
+	})
+	.catch(function(error) {
+		console.log(error);
+	});
 }
 
 // Main function - draws the current state of the puzzle
-function draw_puzzle () {
+function draw_puzzle (to_print = moves + " moves left.") {
 	// If user has no moves left - return to original state
-	if (moves <= 0) {
+	if (!solved && moves <= 0) {
 		layout = [...orig_layout];
 		moves = orig_moves;
-
+		idiot = to_str ();
+		to_print = moves + " moves left.";
 		for (var i = 0; i < 16; i++) {
 			if (layout[i] == 0) {
 				blank = i;
@@ -198,10 +245,7 @@ function draw_puzzle () {
 	ctx.roundRect(xPos-10, yPos-10, recSide+20, recSide+20, 7);
 	ctx.fill();
 	// Text that notifies user of how many moves they have left
-	if (!solved)
-		ctx.fillText (moves + " moves left.", xPos + recSide / 2, yPos - 80);
-	else
-		ctx.fillText ("key", xPos + recSide / 2, yPos - 80);
+	ctx.fillText (to_print, xPos + recSide / 2, yPos - 80);
 	ctx.stroke();
 
 	for (var i = 0; i < 4; i++) {
@@ -227,6 +271,20 @@ function draw_puzzle () {
 			ctx.stroke();
 		}
 	}
+}
+
+// Remains a mystery from D6L2
+function to_str () {
+	var temp = "";
+	for (var i = 0; i < 16; i++) {
+		temp += layout[i];
+		if (i == 15)
+			temp += "\n";
+		else 
+			temp += " ";
+	}
+	
+	return temp;
 }
 		</script>
 		

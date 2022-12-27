@@ -16,7 +16,6 @@ void save_to_file (Solver* solv, Board* brd) {
     if (save_file.is_open()) {
         save_file << solv->get_moves () << endl;  // Record number of moves to solve the puzzle
         save_file << brd->to_str () << endl;      // Record initial state as 1d array
-        save_file << solv->key_step ();           // Record the key for user to use as 1d array
         save_file.close();
     }
     else {

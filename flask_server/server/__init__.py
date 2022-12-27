@@ -1,30 +1,7 @@
 import os
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 
 def create_app (config=None):
-
-
-    #
-    # 15_puzzle
-    #
-
-    # Run the ./bin/15_puzzle program on start, so that ./puzzle.txt exists.
-    try:
-        os.system('./bin/15_puzzle');
-    except OSError:
-        pass
-
-    # Read the created ./puzzle.txt file.
-    from . import fifteen
-    init_vals = fifteen.read_file('./puzzle.txt')
-
-    moves = init_vals[0]
-    # original_layout = init_vals[1]
-    original_layout = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 0, 15]
-
-    # URL of the puzzle completion page
-    fifteen_solved = 'fYNkLnTkjngs4TfYd0r9ZSZAiquFnmFN'
-
 
     #
     # Flask server
@@ -46,7 +23,6 @@ def create_app (config=None):
     except OSError:
         pass
 
-
     #
     # Leaderboard
     #
@@ -58,18 +34,18 @@ def create_app (config=None):
     # 15_Puzzle
     #
 
-    @app.route('/fifteen')
-    def start ():
-        return render_template('fifteen_index.html',
-                               moves=moves,
-                               original_layout=original_layout,
-                               page=fifteen_solved)
+    from . import fifteen
 
-    @app.route(f'/{fifteen_solved}')
-    def solved_puzzle ():
-        return render_template('fifteen_solved.html')
+    fifteen.fifteen(app)
+
+    #
+    # Database
+    #
 
     from . import db
     db.init_app(app)
 
     return app
+
+if __name__ == '__main__':
+    create_app().run()

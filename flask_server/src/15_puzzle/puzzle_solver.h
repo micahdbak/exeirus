@@ -42,7 +42,6 @@ public:
     ~Solver ();
 
     int get_moves ();
-    std::string key_step (); // Returns string representation of 1 of the steps throught solution
     void print_solution ();
 };
 
