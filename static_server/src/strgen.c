@@ -8,6 +8,8 @@
 #include <string.h>
 #include <time.h>
 
+#include "charsets.h"
+
 int main(void)
 {
 	const char *information =
@@ -20,13 +22,7 @@ int main(void)
 	     "5: Base-2\n"
 	     "6: Alphanumeric Characters\n";
 	const char *chars[] = {
-		"-~0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ",
-		"ABCDEFGHIJKLMNOPQRSTUVWXYZ012345",
-		"0123456789abcdef",
-		"0123456789",
-		"01234567",
-		"01",
-		"0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+		CS_64, CS_32, CS_hex, CS_dec, CS_oct, CS_bin, CS_AN
 	};
 	int choice = 0, nchars, len, i;
 

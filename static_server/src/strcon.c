@@ -9,6 +9,8 @@
 #include <ctype.h>
 #include <string.h>
 
+#include "charsets.h"
+
 #define NAN  (~0)
 
 #define ARRSIZE  1024
@@ -19,20 +21,28 @@ enum base {
 	BINARY  = 0,
 	OCTAL   = 1,
 	DECIMAL = 2,
-	HEX     = 3
+	HEX     = 3,
+	TEXT    = 4
 };
 
-#define CAESAR    4
-#define VIGENERE  5
+#define CAESAR    5
+#define VIGENERE  6
 
 void print_help(FILE *file)
 {
 	fprintf(file,
 		"strcon: A string encrypter/decrypter.\n\n"
 
-		"Usage: strcon [mode] [input-text] [base] [cipher] ...\n\n"
+		"Usage: strcon [character-set] [mode] [input-text] [base] [cipher] ...\n\n"
 
-		"\t[mode]: [encrypt/decrypt]\n"
+		"\t[character-set]\n"
+		"\t\tThis is a string containing the characters that should be\n"
+		"\t\tconsidered, and modified. When a cipher is applied to some\n"
+		"\t\tinput, if the addition of an integer changes a character\n"
+		"\t\tto reside outside of this character-set, it will loop back\n"
+		"\t\tto the beginning.\n\n"
+
+		"\t[mode]: [encode/decode]\n"
 		"\t\tThe mode must be specified. This lets the program know if\n"
 		"\t\tit is to [encrypt] or [decrypt] the input-text.\n\n"
 
@@ -68,47 +78,68 @@ void print_help(FILE *file)
 		"\t\tinstead of add.\n");
 }
 
+// Print one byte of (byte) as binary.
 void print_binary(int byte)
 {
+	// string that stores the binary
 	char binary[9];
 	int i;
 
+	// for eight bits of (byte), from the right of (binary)
 	for (i = 7; i >= 0; --i)
 	{
+		// set index (i) of (binary) to be the rightmost bit of (byte)
 		binary[i] = byte & 1 ? '1' : '0';
+		// shift (byte) one bit right and discard rightmost bit
 		byte >>= 1;
 	}
 
+	// terminate the string
 	binary[8] = '\0';
 
 	printf("%s", binary);
 }
 
+/* Returns the index of (arr) in a list of strings.
+ * Returns -1 if (arr) isn't contained in the list. */
 int for_arr(char *arr, int ncmp, ...)
 {
-	va_list ap;
-	int i;
-	char *cmp;
+	va_list ap;  // argument list pointer
+	int i;       // index in (arr)
+	char *cmp;   // string to compare
 
 	va_start(ap, ncmp);
 
+	// for every string in the list
 	for (i = 0; i < ncmp; ++i)
 	{
 		cmp = va_arg(ap, char *);
 
+		// break if they are the same
 		if (strcmp(arr, cmp) == 0)
 			break;
 	}
 
 	va_end(ap);
 
+	/* return -1 if (arr) wasn't contained in the lest,
+	 * otherwise return the index of the matched string. */
 	return i == ncmp ? -1 : i;
 }
 
+/* Read a field of base (base) as an integer and return it.
+ * This assumes that (arr) contains several fields, so (pos)
+ * is the current position in (arr). When (field_to_int) is
+ * finished, it will update (pos) to be at the end of the
+ * just read field. */
 int field_to_int(char *arr, enum base base, int *pos)
 {
-	int mul, i, val, cval, c;
+	int mul,        // multiplier
+	    i,          // index in (arr)
+	    c,          // character in (arr)
+	    val, cval;  // return (val), character value (cval).
 
+	// set the multiplier based on (base)
 	switch (base)
 	{
 	case BINARY:	mul = 2;	break;
@@ -118,24 +149,26 @@ int field_to_int(char *arr, enum base base, int *pos)
 	default:
 		printf("Invalid base provided to (field_to_int).\n");
 
-		break;
+		// return 0 on invalid (base)
+		return 0;
 	}
 
-	i = 0;
 	val = 0;
 
 	c = arr[i++];
 
-	for (; !isspace(c) && c != '\0'; c = arr[i++])
+	for (i = 0; !isspace(c) && c != '\0'; c = arr[i++])
 	{
 		switch (base)
 		{
+		// binary, octal, decimal only use digits
 		case BINARY:
 		case OCTAL:
 		case DECIMAL:
 			cval = c - '0';
 
 			break;
+		// hexadecimal has alphabetic characters
 		case HEX:
 			if (isalpha(c))
 				cval = 10 + c - 'a';
@@ -151,32 +184,66 @@ int field_to_int(char *arr, enum base base, int *pos)
 		val = val * mul + cval;
 	}
 
+	// skip remaining white-space
 	while (c != '\0' && isspace(c))
 		c = arr[i++];
 
+	// don't skip non-white-space
 	--i;
 
+	// update the position in (arr)
 	*pos = *pos + i;
 
 	return val;
 }
 
+// returns the first index of (c) in (arr)
+int cpos(char c, char *arr)
+{
+	int i;  // index in (arr)
+
+	for (i = 0; arr[i] != '\0'; ++i)
+		// break when (c) is found
+		if (c == arr[i])
+			break;
+
+	// return -1 if (c) wasn't found in (arr)
+	return arr[i] == '\0' ? -1 : i;
+}
+
+// print error message and exit
+void fail(char *error)
+{
+	printf("ERROR:\t%s", error);
+	print_help(stderr);
+
+	exit(EXIT_FAILURE);
+}
+
 int main(int argc, char **argv)
 {
-	char arr[ARRSIZE],
-	     vigenere[ARRSIZE];
-	int argi,
-	    c,
-	    decode[DECSIZE],
-	    i, j,
-	    val;
-	enum direction { UNSET = -1, ENCODE = 0, DECODE = 1 } direction;
-	int choice;
-	enum base base;
+	char charset[ARRSIZE],     // charset: character set
+	     arr[ARRSIZE],         // arr: input text
+	     vigenere[ARRSIZE];    // vigenere: vigenere shift string
+	int argi,                  // argi: index of the current argument being parsed
+	    c,                     // c: character in a string
+	    decode[DECSIZE],       // decode: array of integers to decode into text
+	    nchars, chari, charj,  // nchars: number of characters in the character set,
+				   // chari: index of a character in the character set,
+				   // charj: secondary occurrence of (chari).
+	    i, j,                  // i, j: indices used in for loops
+	    shift;                 // shift: caesar cipher shift value
+	enum mode {
+		UNSET = -1,
+		ENCODE = 0,
+		DECODE = 1
+	} mode;          // mode
+	int choice;      // choice
+	enum base base;  // base
 
 	argi = 1;
 
-	// print help on no arguments
+	// print help given no arguments
 	if (argi == argc)
 	{
 		print_help(stderr);
@@ -184,61 +251,76 @@ int main(int argc, char **argv)
 		exit(EXIT_SUCCESS);
 	}
 
-	direction = for_arr(argv[argi++], 2, "encode", "decode");
+	// get the character set
+	strcpy(charset, argv[argi++]);
 
-	if (direction == UNSET)
+	// check if the provided character set is actually a request for a predetermined one
+	switch (for_arr(charset, 8,
+	                "--64",   // CS_64
+			"--u32",  // CS_32
+			"--l32",  // cs_32
+			"--hex",  // CS_hex
+			"--dec",  // CS_dec
+			"--oct",  // CS_oct
+			"--bin",  // CS_bin
+			"--AN"))  // CS_AN
 	{
-		fprintf(stderr, "ERROR:\tMode is unset. Exiting.\n\n");
-		print_help(stderr);
+	// switch for the option
+	case 0:  strcpy(charset, CS_64);   break;
+	case 1:  strcpy(charset, CS_32);   break;
+	case 2:  strcpy(charset, cs_32);   break;
+	case 3:  strcpy(charset, CS_hex);  break;
+	case 4:  strcpy(charset, CS_dec);  break;
+	case 5:  strcpy(charset, CS_oct);  break;
+	case 6:  strcpy(charset, CS_bin);  break;
+	case 7:  strcpy(charset, CS_AN);   break;
+	default:
+		 // treat (charset) as the character set
 
-		exit(EXIT_FAILURE);
+		 break;
 	}
 
-	fprintf(stderr, "%s\n", direction == ENCODE ? "Encoding." : "Decoding.");
+	// set (nchars) to the length of (charset)
+	nchars = strlen(charset);
 
 	if (argi == argc)
-	{
-		fprintf(stderr, "ERROR:\tNot enough arguments provided.\n\n");
-		print_help(stderr);
+		fail("Not enough arguments provided.\n\n");
 
-		exit(EXIT_FAILURE);
-	}
+	// get the whether strcon is to encode or decode
+	mode = for_arr(argv[argi++], 2, "encode", "decode");
 
+	if (mode == UNSET)
+		fail("Mode is unset. Exiting.\n\n");
+
+	fprintf(stderr, "%s\n", mode == ENCODE ? "Encoding." : "Decoding.");
+
+	if (argi == argc)
+		fail("Not enough arguments provided.\n\n");
+
+	// read input text
 	strcpy(arr, argv[argi++]);
 	fprintf(stderr, "Got input text \"%s\".\n\n", arr);
 
 	if (argi == argc)
-	{
-		fprintf(stderr, "ERROR:\tNot enough arguments provided.\n\n");
-		print_help(stderr);
+		fail("Not enough arguments provided.\n\n");
 
-		exit(EXIT_FAILURE);
-	}
-
-	base = for_arr(argv[argi++], 4, "binary", "octal", "decimal", "hexadecimal");
+	// read the base
+	base = for_arr(argv[argi++], 5, "binary", "octal", "decimal", "hexadecimal", "text");
 	fprintf(stderr, "\t(Of output if encoding, of input if decoding.)\n"
 	                "\t0:  Binary      (0,1)\n"
 	                "\t1:  Octal       (0-7)\n"
 	                "\t2:  Decimal     (0-9)\n"
 	                "\t3:  Hexademical (0-9,a-f)\n"
+			"\t4:  Text\n"
 	                "Got base type %d.\n\n", base);
 
 	if (base == INVALID)
-	{
-		fprintf(stderr, "ERROR:\tInvalid base.\n");
-		print_help(stderr);
-
-		exit(EXIT_FAILURE);
-	}
+		fail("Invalid base.\n");
 
 	if (argi == argc)
-	{
-		fprintf(stderr, "ERROR:\tNot enough arguments provided.\n\n");
-		print_help(stderr);
+		fail("Not enough arguments provided.\n\n");
 
-		exit(EXIT_FAILURE);
-	}
-
+	// read the cipher
 	choice = for_arr(argv[argi++], 3, "none", "caesar", "vigenere");
 	fprintf(stderr, "\t(Encoding will add, decoding will subtract.)\n"
 	                "\t0:  Nothing\n"
@@ -247,12 +329,7 @@ int main(int argc, char **argv)
 	                "Got cipher type %d.\n\n", choice);
 
 	if (choice == -1)
-	{
-		fprintf(stderr, "ERROR:\tInvalid choice.\n");
-		print_help(stderr);
-
-		exit(EXIT_FAILURE);
-	}
+		fail("Invalid choice.\n");
 
 	if (choice == 0)
 		choice = base;
@@ -262,49 +339,78 @@ int main(int argc, char **argv)
 	if (c != '\n')
 		printf("err\n");
 
-	if (direction == DECODE)
+	// if strcon is decoding, and the input is of a numerical sort...
+	if (mode == DECODE && base != TEXT)
 	{
+		// ...prepare a list of integer values from the input
 		for (i = 0, j = 0; arr[j] != '\0';)
 			decode[i++] = field_to_int(&arr[j], base, &j);
 
+		// terminate the list with (NAN)
 		decode[i] = NAN;
 	}
 
+	// operate on the input text
 	switch (choice)
 	{
+	// caesar cipher
 	case CAESAR:
 		if (argi == argc)
+			fail("Not enough arguments provided.\n\n");
+
+		// read the shift value for the caesar cipher
+		sscanf(argv[argi++], "%d", &shift);
+		fprintf(stderr, "Got caesar shift %d.\n\n", shift);
+
+		// encode the input text
+		if (mode == ENCODE)
 		{
-			fprintf(stderr, "ERROR:\tNot enough arguments provided.\n\n");
-			print_help(stderr);
-
-			exit(EXIT_FAILURE);
-		}
-
-		sscanf(argv[argi++], "%d", &val);
-		fprintf(stderr, "Got caesar shift %d.\n\n", val);
-
-		if (direction == ENCODE)
-		{
+			// for every character in (arr)
 			for (i = 0; arr[i] != '\0'; ++i)
 			{
+				// set (chari) to be the position of (arr[i]) in (charset)
+				chari = cpos(arr[i], charset);
+
+				// if (arr[i]) isn't in [charset]...
+				if (chari == -1)
+				{
+					// ...print it anyways if the output will be text
+					if (base == TEXT)
+						putc(arr[i], stdout);
+
+					// continue to the next character
+					continue;
+				}
+
+				// (arr[i]) is in [charset]
+
+				// add the shift value to (chari)
+				chari += shift;
+				// ensure that (chari) is from 0 to (nchars)
+				chari %= nchars;
+
+				// print (chari) depending on the output format
 				switch (base)
 				{
 				case BINARY:
-					print_binary((int)arr[i] + val);
+					print_binary(chari);
 					putc(' ', stdout);
 
 					break;
 				case OCTAL:
-					printf("%o ", (int)arr[i] + val);
+					printf("%o ", chari);
 
 					break;
 				case DECIMAL:
-					printf("%d ", (int)arr[i] + val);
+					printf("%d ", chari);
 
 					break;
 				case HEX:
-					printf("%x ", (int)arr[i] + val);
+					printf("%x ", chari);
+
+					break;
+				case TEXT:
+					putc(charset[chari], stdout);
 
 					break;
 				default:
@@ -312,50 +418,125 @@ int main(int argc, char **argv)
 					break;
 				}
 			}
-		} else
-			for (i = 0; decode[i] != NAN; ++i)
-				putc(decode[i] - val, stdout);
+		// decode the input text
+		} else {
+			// if the input is text
+			if (base == TEXT)
+			{
+				// for every character in (arr)
+				for (i = 0; arr[i] != '\0'; ++i)
+				{
+					// set (chari) to be the position of (arr[i]) in (charset)
+					chari = cpos(arr[i], charset);
 
+					// if (chari) isn't in (charset)...
+					if (chari == -1)
+					{
+						// ...print it as-is
+						putc(arr[i], stdout);
+
+						// continue to the next character
+						continue;
+					}
+
+					// subtract the shift value from (chari)
+					chari -= shift;
+					// ensure that (chari) is between -(nchars) and (nchars)
+					chari %= nchars;
+
+					// if (chari) is less than zero...
+					if (chari < 0)
+						// add (nchars) to it to get the equivalent positive value
+						chari += nchars;
+
+					// print the (chari) character of (charset)
+					putc(charset[chari], stdout);
+				}
+			} else {
+				// for every integer in the decode list
+				for (i = 0; decode[i] != NAN; ++i)
+				{
+					// set (chari) to (decode[i])
+					chari = decode[i];
+					// subtract the shift value from (chari)
+					chari -= shift;
+					// ensure that (chari) is between -(nchars) and (nchars)
+					chari %= nchars;
+
+					// if (chari) is less than zero...
+					if (chari < 0)
+						// add (nchars) to it to get the equivalent positive value
+						chari += nchars;
+
+					// print the (chari) character of (charset)
+					putc(charset[chari], stdout);
+				}
+			}
+		}
 
 		putc('\n', stdout);
 
 		break;
 	case VIGENERE:
 		if (argi == argc)
-		{
-			fprintf(stderr, "ERROR:\tNot enough arguments provided.\n\n");
-			print_help(stderr);
+			fail("Not enough arguments provided.\n");
 
-			exit(EXIT_FAILURE);
-		}
-
+		// read vigenere shift string
 		strcpy(vigenere, argv[argi++]);
 		fprintf(stderr, "Got vigenere string \"%s\".\n\n", vigenere);
 
-		if (direction == ENCODE)
+		if (mode == ENCODE)
 		{
-			for (i = 0, j = 0; arr[i] != '\0'; ++i, ++j)
+			// for every character in (arr[i])
+			for (i = 0, j = 0; arr[i] != '\0'; ++i)
 			{
+				// set (chari) to be the position of (arr[i]) in (charset)
+				chari = cpos(arr[i], charset);
+
+				// if (arr[i]) wasn't in (charset)...
+				if (chari < 0)
+				{
+					// ...print (arr[i]) if the output is text
+					if (base == TEXT)
+						putc(arr[i], stdout);
+
+					// continue to the next character
+					continue;
+				}
+
 				if (vigenere[j] == '\0')
 					j = 0;
 
+				// this assumes that the shift string contains only characters contained in (charset)
+				charj = cpos(vigenere[j++], charset);
+
+				// add (charj) to (chari)
+				chari += charj;
+				// ensure that (chari) is within the bounds 0 to (nchars)
+				chari %= nchars;
+
+				// print the value of (chari)
 				switch (base)
 				{
 				case BINARY:
-					print_binary((int)arr[i] + (int)vigenere[j]);
+					print_binary(chari);
 					putc(' ', stdout);
 
 					break;
 				case OCTAL:
-					printf("%o ", (int)arr[i] + (int)vigenere[j]);
+					printf("%o ", chari);
 
 					break;
 				case DECIMAL:
-					printf("%d ", (int)arr[i] + (int)vigenere[j]);
+					printf("%d ", chari);
 
 					break;
 				case HEX:
-					printf("%x ", (int)arr[i] + (int)vigenere[j]);
+					printf("%x ", chari);
+
+					break;
+				case TEXT:
+					putc(charset[chari], stdout);
 
 					break;
 				default:
@@ -363,40 +544,117 @@ int main(int argc, char **argv)
 					break;
 				}
 			}
-		} else
-			for (i = 0, j = 0; decode[i] != NAN; ++i, ++j)
+		} else {
+			// decode text
+			if (base == TEXT)
 			{
-				if (vigenere[j] == '\0')
-					j = 0;
+				// for every character in (arr[i])
+				for (i = 0, j = 0; arr[i] != '\0'; ++i)
+				{
+					// set (chari) to be the position of (arr[i]) in (charset)
+					chari = cpos(arr[i], charset);
 
-				putc(decode[i] - (int)vigenere[j], stdout);
+					// if (arr[i]) isn't contained in (charset)...
+					if (chari < 0)
+					{
+						// ...print (arr[i])
+						putc(arr[i], stdout);
+
+						// continue to the next character
+						continue;
+					}
+
+					if (vigenere[j] == '\0')
+						j = 0;
+
+					// this assumes that the shift string contains only characters contained in (charset)
+					charj = cpos(vigenere[j++], charset);
+
+					// subtract (charj) from (chari)
+					chari -= charj;
+					// ensure that (chari) is from -(nchars) to (nchars)
+					chari %= nchars;
+
+					// if (chari) is less than zero...
+					if (chari < 0)
+						// ...set it to its equivalent positive form
+						chari += nchars;
+
+					// print the character in (charset) at (chari)
+					putc(charset[chari], stdout);
+				}
+			} else {
+				// for every integer in the decode list
+				for (i = 0, j = 0; decode[i] != NAN; ++i)
+				{
+					// set (chari) to the value of (decode[i])
+					chari = decode[i];
+
+					if (vigenere[j] == '\0')
+						j = 0;
+
+					// this assumes that every character in the shift string is found in (charset)
+					charj = cpos(vigenere[j++], charset);
+
+					// subtract (charj) from (chari)
+					chari -= charj;
+					// ensure that (chari) is from -(nchars) to (nchars)
+					chari %= nchars;
+
+					// if chari is less than zero...
+					if (chari < 0)
+						// ...set it to its equivalent positive form
+						chari += nchars;
+
+					// print the character in (charset) at (chari)
+					putc(charset[chari], stdout);
+				}
 			}
-
+		}
 
 		putc('\n', stdout);
 
 		break;
 	default:
-		if (direction == ENCODE)
+		if (mode == ENCODE)
 			for (i = 0; arr[i] != '\0'; ++i)
 			{
+				// set (chari) to the position of (arr[i]) in (charset)
+				chari = cpos(arr[i], charset);
+
+				// if (arr[i]) isn't in (charset)
+				if (chari < 0)
+				{
+					// print it if the output is text
+					if (base == TEXT)
+						putc(arr[i], stdout);
+
+					// continue to the next character
+					continue;
+				}
+
+				// print (chari) with respect to the output base
 				switch (base)
 				{
 				case BINARY:
-					print_binary((int)arr[i]);
+					print_binary(chari);
 					putc(' ', stdout);
 
 					break;
 				case OCTAL:
-					printf("%o ", (int)arr[i]);
+					printf("%o ", chari);
 
 					break;
 				case DECIMAL:
-					printf("%d ", (int)arr[i]);
+					printf("%d ", chari);
 
 					break;
 				case HEX:
-					printf("%x ", (int)arr[i]);
+					printf("%x ", chari);
+
+					break;
+				case TEXT:
+					putc(charset[chari], stdout);
 
 					break;
 				default:
@@ -404,9 +662,22 @@ int main(int argc, char **argv)
 					break;
 				}
 			}
-		else
-			for (i = 0; decode[i] != NAN; ++i)
-				putc((char)decode[i], stdout);
+		else {
+			if (base == TEXT)
+				// decoding text without a cipher is redundant
+				printf("%s", arr);
+			else {
+				// for every integer in the decode list
+				for (i = 0; decode[i] != NAN; ++i)
+				{
+					// set (chari) to (decode[i])
+					chari = decode[i];
+
+					// print the character at (chari) in (charset)
+					putc(charset[chari], stdout);
+				}
+			}
+		}
 
 		putc('\n', stdout);
 

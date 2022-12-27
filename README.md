@@ -116,7 +116,13 @@ Working on this!
 
 A string encrypter/decrypter.
 
-Usage: ``strcon [mode] [input-text] [base] [cipher] ...``
+Usage: ``strcon [character-set] [mode] [input-text] [base] [cipher] ...``
+
+* ``[character-set]``
+    This is a string containing the characters that should be considered, and modified.
+    When a cipher is applied to some input,
+    if the addition of an integer changes a character to reside outside of this character-set,
+    it will loop back to the beginning.
 
 * ``[mode]``: ``[encrypt/decrypt]``
     This lets the program know if it is to [encrypt] or [decrypt] the input-text.
