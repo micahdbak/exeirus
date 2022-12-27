@@ -11,6 +11,8 @@
 
 #include "charsets.h"
 
+#undef DEBUG
+
 #define NAN  (~0)
 
 #define ARRSIZE  1024
@@ -147,7 +149,7 @@ int field_to_int(char *arr, enum base base, int *pos)
 	case DECIMAL:	mul = 10;	break;
 	case HEX:	mul = 16;	break;
 	default:
-		printf("Invalid base provided to (field_to_int).\n");
+		printf("ERROR:\tInvalid base given to (field_to_int).\n");
 
 		// return 0 on invalid (base)
 		return 0;
@@ -232,7 +234,8 @@ int main(int argc, char **argv)
 				   // chari: index of a character in the character set,
 				   // charj: secondary occurrence of (chari).
 	    i, j,                  // i, j: indices used in for loops
-	    shift;                 // shift: caesar cipher shift value
+	    shift,                 // shift: caesar cipher shift value
+	    ascii;                 // ASCII: character set is ascii
 	enum mode {
 		UNSET = -1,
 		ENCODE = 0,
@@ -254,26 +257,37 @@ int main(int argc, char **argv)
 	// get the character set
 	strcpy(charset, argv[argi++]);
 
+	// character set by default is not ASCII
+	ascii = 0;
+
 	// check if the provided character set is actually a request for a predetermined one
-	switch (for_arr(charset, 8,
+	switch (for_arr(charset, 10,
 	                "--64",   // CS_64
 			"--u32",  // CS_32
 			"--l32",  // cs_32
+			"--abc",  // cs_26
 			"--hex",  // CS_hex
 			"--dec",  // CS_dec
 			"--oct",  // CS_oct
 			"--bin",  // CS_bin
-			"--AN"))  // CS_AN
+			"--AN",   // CS_AN
+			"--ascii"))
 	{
 	// switch for the option
 	case 0:  strcpy(charset, CS_64);   break;
 	case 1:  strcpy(charset, CS_32);   break;
 	case 2:  strcpy(charset, cs_32);   break;
-	case 3:  strcpy(charset, CS_hex);  break;
-	case 4:  strcpy(charset, CS_dec);  break;
-	case 5:  strcpy(charset, CS_oct);  break;
-	case 6:  strcpy(charset, CS_bin);  break;
-	case 7:  strcpy(charset, CS_AN);   break;
+	case 3:  strcpy(charset, cs_26);   break;
+	case 4:  strcpy(charset, CS_hex);  break;
+	case 5:  strcpy(charset, CS_dec);  break;
+	case 6:  strcpy(charset, CS_oct);  break;
+	case 7:  strcpy(charset, CS_bin);  break;
+	case 8:  strcpy(charset, CS_AN);   break;
+	case 9:
+		 // set the character set to ASCII
+		 ascii = 1;
+
+		 break;
 	default:
 		 // treat (charset) as the character set
 
@@ -292,20 +306,25 @@ int main(int argc, char **argv)
 	if (mode == UNSET)
 		fail("Mode is unset. Exiting.\n\n");
 
+#ifdef DEBUG
 	fprintf(stderr, "%s\n", mode == ENCODE ? "Encoding." : "Decoding.");
+#endif
 
 	if (argi == argc)
 		fail("Not enough arguments provided.\n\n");
 
 	// read input text
 	strcpy(arr, argv[argi++]);
+#ifdef DEBUG
 	fprintf(stderr, "Got input text \"%s\".\n\n", arr);
+#endif
 
 	if (argi == argc)
 		fail("Not enough arguments provided.\n\n");
 
 	// read the base
 	base = for_arr(argv[argi++], 5, "binary", "octal", "decimal", "hexadecimal", "text");
+#ifdef DEBUG
 	fprintf(stderr, "\t(Of output if encoding, of input if decoding.)\n"
 	                "\t0:  Binary      (0,1)\n"
 	                "\t1:  Octal       (0-7)\n"
@@ -313,6 +332,7 @@ int main(int argc, char **argv)
 	                "\t3:  Hexademical (0-9,a-f)\n"
 			"\t4:  Text\n"
 	                "Got base type %d.\n\n", base);
+#endif
 
 	if (base == INVALID)
 		fail("Invalid base.\n");
@@ -322,22 +342,22 @@ int main(int argc, char **argv)
 
 	// read the cipher
 	choice = for_arr(argv[argi++], 3, "none", "caesar", "vigenere");
+#ifdef DEBUG
 	fprintf(stderr, "\t(Encoding will add, decoding will subtract.)\n"
 	                "\t0:  Nothing\n"
 	                "\t1:  Caesar Cipher\n"
 	                "\t2:  Vigenere Cipher\n"
 	                "Got cipher type %d.\n\n", choice);
+#endif
 
 	if (choice == -1)
 		fail("Invalid choice.\n");
 
-	if (choice == 0)
+	// if character set is ASCII, do not perform any ciphers
+	if (choice == 0 || ascii)
 		choice = base;
 	else
 		choice = choice == 1 ? CAESAR : VIGENERE;
-
-	if (c != '\n')
-		printf("err\n");
 
 	// if strcon is decoding, and the input is of a numerical sort...
 	if (mode == DECODE && base != TEXT)
@@ -360,7 +380,9 @@ int main(int argc, char **argv)
 
 		// read the shift value for the caesar cipher
 		sscanf(argv[argi++], "%d", &shift);
+	#ifdef DEBUG
 		fprintf(stderr, "Got caesar shift %d.\n\n", shift);
+	#endif
 
 		// encode the input text
 		if (mode == ENCODE)
@@ -483,7 +505,9 @@ int main(int argc, char **argv)
 
 		// read vigenere shift string
 		strcpy(vigenere, argv[argi++]);
+	#ifdef DEBUG
 		fprintf(stderr, "Got vigenere string \"%s\".\n\n", vigenere);
+	#endif
 
 		if (mode == ENCODE)
 		{
@@ -619,19 +643,26 @@ int main(int argc, char **argv)
 		if (mode == ENCODE)
 			for (i = 0; arr[i] != '\0'; ++i)
 			{
-				// set (chari) to the position of (arr[i]) in (charset)
-				chari = cpos(arr[i], charset);
-
-				// if (arr[i]) isn't in (charset)
-				if (chari < 0)
+				// custom character set
+				if (!ascii)
 				{
-					// print it if the output is text
-					if (base == TEXT)
-						putc(arr[i], stdout);
+					// set (chari) to the position of (arr[i]) in (charset)
+					chari = cpos(arr[i], charset);
 
-					// continue to the next character
-					continue;
-				}
+					// if (arr[i]) isn't in (charset)
+					if (chari < 0)
+					{
+						// print it if the output is text
+						if (base == TEXT)
+							putc(arr[i], stdout);
+
+						// continue to the next character
+						continue;
+					}
+				// ASCII character set
+				} else
+					// (chari) is the integer value of (arr[i])
+					chari = arr[i];
 
 				// print (chari) with respect to the output base
 				switch (base)
@@ -670,11 +701,17 @@ int main(int argc, char **argv)
 				// for every integer in the decode list
 				for (i = 0; decode[i] != NAN; ++i)
 				{
-					// set (chari) to (decode[i])
-					chari = decode[i];
+					// custom character set
+					if (!ascii)
+					{
+						// set (chari) to (decode[i])
+						chari = decode[i];
 
-					// print the character at (chari) in (charset)
-					putc(charset[chari], stdout);
+						// print the character at (chari) in (charset)
+						putc(charset[chari], stdout);
+					// ASCII character set
+					} else
+						putc(decode[i], stdout);
 				}
 			}
 		}

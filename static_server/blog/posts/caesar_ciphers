@@ -1,0 +1,84 @@
+Caesar Ciphers
+C555
+1 23 12 2022
+Dear $EXEIRUS$,
+\P
+A very common cipher is the Caesar cipher.
+It is a simple cipher, effective, but easy to crack.\n
+Essentially, given a character set, some input text to encrypt, and a number to shift by,
+the Caesar cipher "shifts" every character in the input text by this constant number.
+\P
+But what do I mean by "shifting"?\n
+To "shift" a character, you must first know its numerical value.
+Its numerical value is given by its position in a character set.
+\P
+Let us create a Caesar cipher for example.\n
+Our character set will be the following:\n
+\P
+\(m
+\(m17 14 21 21 24\)m (space) \(m6 24 1 21 13\)m
+abcdefghijklmnopqrstuvwxyz
+\)m
+\P
+This character set has 26 characters in it,
+and each of these characters has an index representing its position in the character set.
+\(ma\)m has the index of \(m0\)m, because it is first,
+and \(mz\)m has the index of \(m25\)m, because it is last.
+\P
+Then suppose that we want to encrypt the text "\(mhello world\)m"
+with respect to this character set.
+The first step is to represent each character of \(mhello world\)m
+as indices in the character set.
+\P
+So, \(mhello world\)m becomes:
+\P
+\(m7 4 11 11 14\)m (space) \(m22 14 17 11 3\)m
+\P
+Notice that the space does not have a numerical value.
+This is because it is not contained in the character set.
+We will let it carry through to the encrypted form of \(mhello world\)m, unchanged.
+\P
+Then, we choose a number to shift by.
+Let us choose \(m10\)m.
+To shift the characters of \(mhello world\)m by \(m10\)m,
+we add \(m10\)m to each of the numerical values of the text.
+This addition can be referred to as shifting \(iforward\)i.
+So the numerical values shown above becomes:
+\P
+\(m17 14 21 21 24\)m (space) \(m32 24 27 21 13\)m
+\P
+However, we are not finished just yet.
+Notice how some of these numbers are greater than 25,
+exceeding the bounds of the character set.
+What we must do is allow these characters
+that are shifted \(ioutside\)i of the character set
+to "loop" back to the start of the character set.
+Essentially, we subtract 26 from each of the numbers that exceed 25.
+In other words, we modulo 26 every number.\n
+The numerical values then become:
+\P
+\(m17 14 21 21 24\)m (space) \(m6 24 1 21 13\)m
+\P
+Which, now that each index is within the bounds of the character set,
+can be converted to plaintext.
+Each numerical value is replaced with the character of that index in the character set.
+So it becomes:
+\P
+\(mrovvy gybvn\)m
+\P
+To summarize, if we are to shift \(mhello world\)m by \(m10\)m
+with respect to the character set \(mabcdefghijklmnopqrstuvwxyz\)m,
+we would get \(mrovvy gybvn\)m.
+\P
+However, although I just described how to \(iencrypt\)i text with the Caesar cipher,
+I have not said anything about \(idecrypting\)i Caesar cipher text.
+\P
+Luckily, it is simple, and follows easily from encryption.
+To decrypt Caesar cipher text, instead of \(iadding\)i the shift value,
+that is, shift \(iforward\)i, you \(isubtract\)i the shift value, shift \(ibackward\)i.
+But beware, if your indices become negative
+you must make it that they are within the bounds of your character set.
+So, for example, using the character set \(mabcdefghijklmnopqrstuvwxyz\)m,
+if \(ma\)m is shifted backwards by \(m4\)m, then it becomes \(mw\)m.
+Using numerical values, this is done by adding \(m26\)m,
+the size of the character set, to the negative index.

@@ -7,6 +7,7 @@
 #define CS_64   "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-~"
 #define CS_32   "ABCDEFGHIJKLMNOPQRSTUVWXYZ012345"
 #define cs_32   "abcdefghijklmnopqrstuvwxyz012345"
+#define cs_26   "abcdefghijklmnopqrstuvwxyz"
 #define CS_hex  "0123456789abcdef"
 #define CS_dec  "0123456789"
 #define CS_oct  "01234567"

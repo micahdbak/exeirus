@@ -20,22 +20,22 @@ Keep an eye out for things that look awry, because there are \(bkeys\)b hidden i
 A \(bkey\)b looks something like this, when it is found:
 \P
 \(m
-1-a1b2c3d4
+1:a1b2c3d4
 \)m
 \P
 But it might not look like that initially.
 It might be the solution to a cipher, or hidden in an image, or a variety of other things.
 \P
 The leading digit of a \(bkey\)b is the position of that key in the \(bmaster-key\)b.
-The characters following the hyphen is the content of the \(bkey\)b itself.
+The characters following the colon is the content of the \(bkey\)b itself.
 \P
 Suppose that you have found the following \(bkeys\)b:
 \P
 \(m
-1-a1b2c3d4\n
-2-e5f6g7h8\n
-3-i9j0k1l2\n
-4-m3n4o5p6
+1:a1b2c3d4\n
+2:e5f6g7h8\n
+3:i9j0k1l2\n
+4:m3n4o5p6
 \)m
 \P
 Then the \(bmaster-key\)b is completed by combining these \(bkeys\)b like so:
