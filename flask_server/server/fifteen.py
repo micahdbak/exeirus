@@ -6,7 +6,7 @@ import copy, os, random, string
 def fifteen (app):
     # Run the ./bin/15_puzzle program on start, so that ./puzzle.txt exists.
     try:
-        os.system('./bin/15_puzzle');
+        os.system('./bin/15_puzzle')
     except OSError:
         pass
 
@@ -18,7 +18,7 @@ def fifteen (app):
     # orig_layout = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 0, 15]
     key = init_vals[2][:8]  # For key we'd be using only first 8 values
 
-
+    # Main page of 15 puzzle
     @app.route('/fifteen', methods=["GET", "POST"])
     def start ():
         # Receiving the message from JavaScript about possible completion
@@ -26,10 +26,15 @@ def fifteen (app):
             json_data = request.get_json()
             rspn = "Allowed"
 
-            moves_left = int(json_data['left'])
-            solution = json_data['check']
-            # Check if completion is valid
-            if not check_solution(solution, orig_layout, moves - moves_left, moves):
+            # Try to retrieve needed values from passed values
+            try:
+                moves_left = int(json_data['left'])
+                solution = json_data['check']
+                # Check if completion is valid
+                if not check_solution(solution, orig_layout, moves - moves_left, moves):
+                    rspn = "Declined"
+            # If not - an attempt to cheat
+            except Exception:
                 rspn = "Declined"
             # Sending the message to JavaScript about validity with the link to redirect to
             return {
@@ -40,7 +45,8 @@ def fifteen (app):
         return render_template('fifteen_index.html',
                                moves=moves,
                                original_layout=orig_layout)
-    
+
+    # Page that user is redirected to upon completion
     @app.route(f'/fifteen/{key}')
     def solved ():
         return render_template('fifteen_solved.html')
@@ -70,32 +76,37 @@ def read_file (filename):
 # 2) Amount of moves used is valid and matches recorded steps
 # 3) Is continuous - each next board is a neighbor of previous
 def check_solution (solution, orig, delta_moves, min_moves):
-    lines = solution.splitlines()
+    # Try to work with sent values
+    try:
+        lines = solution.splitlines()
 
-    # Check if amount of moves used is less than minimum and
-    # If amount of recorded steps doesn't match moves used (+1 for initial state in lines)
-    if delta_moves < min_moves or len(lines) != delta_moves + 1:
-        return False
-
-    # Check for first and last values of solution - must be original and final
-    mapped = list( map( int,  lines[0].split(" ")) )
-    for i in range(len(  mapped ) ):
-        if mapped[i] != orig[i]:
-            return False
-    if lines[-1] != "1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 0":
-        return False
-
-    # Check for continuity of solution
-    prev, cur = 0, 0
-    for line in lines:
-        prev = cur
-        cur = to_array(line)
-
-        # Check if previous move and current move are 2 neighbor boards
-        if prev != 0 and are_neighbors(copy.deepcopy(prev), copy.deepcopy(cur)) == False:
+        # Check if amount of moves used is less than minimum and
+        # If amount of recorded steps doesn't match moves used (+1 for initial state in lines)
+        if delta_moves < min_moves or len(lines) != delta_moves + 1:
             return False
 
-    return True
+        # Check for first and last values of solution - must be original and final
+        mapped = list( map( int,  lines[0].split(" ")) )
+        for i in range(len(  mapped ) ):
+            if mapped[i] != orig[i]:
+                return False
+        if lines[-1] != "1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 0":
+            return False
+
+        # Check for continuity of solution
+        prev, cur = 0, 0
+        for line in lines:
+            prev = cur
+            cur = to_array(line)
+
+            # Check if previous move and current move are 2 neighbor boards
+            if prev != 0 and are_neighbors(copy.deepcopy(prev), copy.deepcopy(cur)) == False:
+                return False
+
+        return True
+    # If not - obviously an attempt to cheat
+    except Exception:
+        return False
 
 
 # Checks if 2 boards are "neighbors"
