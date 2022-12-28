@@ -3,7 +3,7 @@
 ## Description
 
 "This is a game. Complete it, and you will be rewarded.
-You will come accross a great many puzzles.
+You will come across a great many puzzles.
 By solving a puzzle, your solution will guide you to the next puzzle.
 But do not rush, for every puzzle contains something else that is vital to this game's completion.
 Keep an eye out for things that look awry, because there are keys hidden in every puzzle, in nearly every page. ..." (from index.html)
