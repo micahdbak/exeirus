@@ -1,10 +1,9 @@
 Hamming Codes
 C555
 0 23 12 2022
-Dear e\(sx\)seirus,
+Dear $EXEIRUS$,
 \P
 Do you know about Hamming codes?
-\(sI\)s think the ability to decode Hamming codes is going to be important.
 Essentially, they are a method for verifying transmitted data's "validity;"
 it is a method to determine which bit in a block of data is corrupted, if such a bit exists.
 \P

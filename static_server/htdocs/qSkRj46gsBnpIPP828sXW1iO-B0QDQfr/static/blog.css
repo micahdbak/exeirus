@@ -20,6 +20,13 @@ span.monospace {
 span.monospace b {
 	color: white;
 }
+span.important {
+	padding: 2px;
+	border-radius: 8px;
+	background-color: red;
+	color: yellow;
+	font-style: normal;
+}
 
 .page {
 	max-width: 768px;

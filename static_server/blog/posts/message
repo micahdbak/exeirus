@@ -1,6 +1,6 @@
-Welcome to $EXEIRUS$.
+Welcome to $EXEIRUS$. <span class="important">IMPORTANT</span>
 C555
--1 23 1 2023
+0 23 1 2023
 <img style="width: 256px;" src="$DOMAIN$/$BLOG$/static/exeirus.png">
 \P
 Welcome to $EXEIRUS$.
@@ -22,6 +22,16 @@ A \(bkey\)b looks something like this, when it is found:
 \(m
 1:a1b2c3d4
 \)m
+
+<!--
+
+Your wit is yet to be rewarded.
+
+Behold, a key:
+
+3:MMYYY6sV
+
+-->
 \P
 But it might not look like that initially.
 It might be the solution to a cipher, or hidden in an image, or a variety of other things.

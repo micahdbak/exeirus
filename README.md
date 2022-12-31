@@ -37,6 +37,14 @@ make static_server
 
 The previously mentioned programs will be compiled and written to ``static_server/bin`` for further use.
 
+Additionally, if you intend to compile certain parts of the static server,
+such as C555's journal or NousTele, you can run the following commands, respectively:
+
+```
+make static_blog
+make static_tele
+```
+
 ### The Flask Server
 
 #### Dependencies
