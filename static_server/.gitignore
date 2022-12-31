@@ -1,3 +1,7 @@
-./bin
-./blog/docs
-./tele/docs
+bin
+blog/docs
+tele/docs
+
+# NOTE: This ignores all html files in the subdirectory under htdocs,
+#       hopefully this is the intended behaviour.
+htdocs/**/*.html
