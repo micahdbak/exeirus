@@ -72,6 +72,13 @@ static_server: static_blog static_tele
 		$(FLASK_SERVER)/src/15_puzzle/puzzle_solver.cpp \
 		$(FLASK_SERVER)/src/15_puzzle/main.cpp
 
+sudoku:
+	mkdir -p $(FLASK_SERVER)/bin    # Ensure that folder for binaries exists in FLASK_SERVER
+	# Compile sudoku generator program
+	g++ -std=c++11 -o $(FLASK_SERVER)/bin/sdk \
+		$(FLASK_SERVER)/src/sudoku/main.cpp   \
+		$(FLASK_SERVER)/src/sudoku/sudoku.cpp
+
 #
 #	General recipes
 #

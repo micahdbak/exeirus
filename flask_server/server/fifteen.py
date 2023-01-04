@@ -12,15 +12,15 @@ def fifteen (app):
 
 
     # Read the created ./puzzle.txt file.
-    init_vals = read_file('./puzzle.txt')
+    init_vals = read_15('./puzzle.txt')
     moves = init_vals[0]
     orig_layout = init_vals[1]
     # orig_layout = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 0, 15]
-    key = init_vals[2][:8]  # For key we'd be using only first 8 values
+    key = init_vals[2]
 
     # Main page of 15 puzzle
     @app.route('/fifteen', methods=["GET", "POST"])
-    def start ():
+    def start_15 ():
         # Receiving the message from JavaScript about possible completion
         if request.method == "POST":
             json_data = request.get_json()
@@ -31,7 +31,7 @@ def fifteen (app):
                 moves_left = int(json_data['left'])
                 solution = json_data['check']
                 # Check if completion is valid
-                if not check_solution(solution, orig_layout, moves - moves_left, moves):
+                if not check_15_solution(solution, orig_layout, moves - moves_left, moves):
                     rspn = "Declined"
             # If not - an attempt to cheat
             except Exception:
@@ -48,13 +48,14 @@ def fifteen (app):
 
     # Page that user is redirected to upon completion
     @app.route(f'/fifteen/{key}')
-    def solved ():
+    def solved_15 ():
         return render_template('fifteen_solved.html')
 
 
-def read_file (filename):
+def read_15 (filename):
     # Output array
     init_vals = []
+
     file = open(filename, "r")
     # Pass all strings into the array
     for line in file:
@@ -64,7 +65,7 @@ def read_file (filename):
     init_vals[0] = int(init_vals[0])
     # Break string into numbers and map to integers
     init_vals[1] = list( map( int,  init_vals[1].split(" ")) )
-    # Add the key to init_vals
+    # Create the key consisting of random ASCII characters
     letters = string.ascii_letters
     init_vals.append( ''.join(random.choice(letters) for i in range(8)) )
 
@@ -75,8 +76,8 @@ def read_file (filename):
 # 1) Starts from the original board and ends at correct board
 # 2) Amount of moves used is valid and matches recorded steps
 # 3) Is continuous - each next board is a neighbor of previous
-def check_solution (solution, orig, delta_moves, min_moves):
-    # Try to work with sent values
+def check_15_solution (solution, orig, delta_moves, min_moves):
+    # Try to work with received values
     try:
         lines = solution.splitlines()
 
@@ -104,7 +105,7 @@ def check_solution (solution, orig, delta_moves, min_moves):
                 return False
 
         return True
-    # If not - obviously an attempt to cheat
+    # If not possible - obviously an attempt to cheat
     except Exception:
         return False
 

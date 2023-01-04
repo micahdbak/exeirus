@@ -37,6 +37,14 @@ def create_app (config=None):
     from . import fifteen
 
     fifteen.fifteen(app)
+    
+    #
+    # Sudoku
+    #
+    
+    from . import sudoku
+    
+    sudoku.sudoku(app)
 
     #
     # Database

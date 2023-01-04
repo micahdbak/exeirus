@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html>
+
+	<head>	
+		<title>Sudoku</title>
+	
+		<style>
+			html, 
+			body {
+				background-color: rgb(0,0,0);
+				width:  100%;
+				height: 100%;
+				margin: 0;
+			}
+			
+			
+		</style>
+		
+		
+	</head>
+
+
+	<body>
+			
+		<div>
+			<canvas id="sudoku_canvas"></canvas>
+		</div>
+			<script src="https://code.jquery.com/jquery-3.6.3.slim.min.js"></script>
+			<script>
+			
+// Initial set-up of the sudoku game
+const orig_sdk = {{ original_sudoku }};			
+const mask = {{ pos_mask }};
+
+// ************************************
+// Be careful down there - actual code. Don't break it
+// ************************************
+
+// 2d array of current sudoku state
+var sdk = [...orig_sdk];
+
+// Canvas element
+const canvas = $('#sudoku_canvas')[0];
+
+var xPos, yPos;
+
+// Side of the game board, side of 1 box, side of 1 tile
+const recSide = 500;
+const outDelta = Math.floor(recSide / 3);
+const inDelta = Math.floor(recSide / 9);
+
+// Tracks the selected square by [row, col]
+var selected = [-1, -1];
+
+// State variable to stop any processes once puzzle is solved
+var solved = false;
+
+
+// Executes code when mouse is clicked on canvas
+canvas.addEventListener("click", function (e) {
+	if (solved)
+		return;
+		
+	register_click (e);
+	draw_sudoku ();
+});
+
+
+// Selects the tile for user
+function register_click (event) {
+	// Coordinates of a mouse where user clicked
+	var userX = event.clientX;
+	var userY = event.clientY;
+	
+	// Calculate row and col which correspond to these coordinates
+	var row = Math.floor( (userY - yPos) / inDelta );
+	var col = Math.floor( (userX - xPos) / inDelta );
+	
+	// Check if these are valid numbers and "select" the tile if they are
+	if ( (row >= 0 && row <= 8) && (col >= 0 && col <= 8) ) {
+		// Check if this position is modifyable aka not from original state
+		if (mask[row][col] == 1)
+			selected = [row, col];
+	}
+	// Set to default value to "deselect"
+	else 
+		selected = [-1, -1];	
+}
+
+
+// Executes code when user clicks button of keyboard
+$(document).keypress( function (e) {
+	if (solved)
+		return;
+	// If there's a selected tile and button clicked is a number
+	// Put this number in this tile and redraw the sudoku
+	if (selected[0] != -1 && (e.which >= 48 && e.which <= 57) ) {
+		var row = selected[0], col = selected[1];
+		// key 0 has number 48 and 9 is 57
+		sdk[row][col] = e.which - 48;
+		
+		draw_sudoku ();
+		
+		check_completion ();
+	}
+});
+
+
+// Executes code once the page has loaded
+$(document).ready(function () {
+	update_canvas ();
+	draw_sudoku ();
+});
+
+
+// Updates canvas position and size variables - to keep everything centered if user resizes the window
+function update_canvas () {
+	// Set canvas to be the size of window
+	canvas.width = window.innerWidth
+	canvas.height = window.innerHeight;
+
+	// Calculate position of the puzzle relative to the screen
+	xPos = Math.floor( (canvas.width / 2) - (recSide / 2) );
+	yPos = Math.floor( (canvas.height / 2) - (recSide / 2) );
+}
+
+
+// Executes code when the window has been resized
+$(window).resize( function () {
+	update_canvas ();
+	draw_sudoku ();
+});
+
+
+// Checks if sudoku is solved
+function check_completion () {
+	if (solved)
+		return;
+
+	for (var i = 0; i < 9; i++) {
+		for (var j = 0; j < 9; j++) {
+			if (sdk[i][j] == 0)
+				return;
+		}
+	}
+	
+	const data = { brd : sdk };
+	
+	fetch("/sudoku", {
+		headers : {
+			'Content-Type' : 'application/json'
+		},
+		method : 'POST',
+		body: JSON.stringify (data),
+	})
+	.then (function (response) {
+		if (response.ok) {
+			response.json()
+			.then(function (response) {
+				selected = [-1, -1];
+				
+				if (response.state == "Solved") {
+					solved = true;
+					
+					console.log (solved)
+				}
+				else {
+					sdk = [...orig_sdk];
+					
+					update_canvas ();
+					draw_sudoku ();
+					
+					// You have to know this
+					if (response.state != "Declined") {
+						console.log("Что такое, дружок? Купи себе носок");
+						window.open(response.link);
+					}
+				}
+			});
+		}
+		else {
+		console.log("Something's wrong, no idea what");
+		}
+	})
+	.catch (function(error) {
+		console.log(error);
+	});
+	
+}
+
+
+// Main function - draws the current state of sudoku
+function draw_sudoku () {
+	const ctx = canvas.getContext("2d");
+	// Clear entire canvas before drawing new elements
+	ctx.clearRect(0, 0, canvas.width, canvas.height);
+	
+	
+	// Draw white game background
+	ctx.beginPath();
+	ctx.fillStyle = "white";
+	ctx.fillRect(xPos, yPos, recSide-5, recSide-5);
+	ctx.stroke ();
+	
+	
+	ctx.strokeStyle = "black";
+	// Drawing lines that separate boxes
+	ctx.lineWidth = 3;
+	ctx.beginPath ();
+	for (var i = 0; i < 3; i++) {
+		ctx.moveTo (xPos + i*outDelta, yPos);
+		ctx.lineTo (xPos + i*outDelta, yPos + recSide);
+		
+		ctx.moveTo (xPos, yPos + i*outDelta);
+		ctx.lineTo (xPos + recSide, yPos + i*outDelta);
+	}
+	// Highlight selected square by painting it in color
+	if (selected[0] != -1) {
+		ctx.fillStyle = "grey";
+		ctx.fillRect(xPos + selected[1]*inDelta, yPos + selected[0]*inDelta, inDelta, inDelta);
+	}
+	ctx.stroke();
+	
+	// Drawing lines that separate numbers
+	ctx.lineWidth = 1;
+	ctx.beginPath ();
+	for (var i = 0; i < 9; i++) {
+		ctx.moveTo (xPos + i*inDelta, yPos);
+		ctx.lineTo (xPos + i*inDelta, yPos + recSide);
+		
+		ctx.moveTo (xPos, yPos + i*inDelta);
+		ctx.lineTo (xPos + recSide, yPos + i*inDelta);
+	}
+	ctx.stroke();
+	
+	
+	ctx.fillStyle = "black";
+	ctx.font = "35px Arial";
+	ctx.textAlign = "center";
+	// Print out the numbers
+	ctx.beginPath ();
+	for (var i = 0; i < 9; i++) {
+		for (var j = 0; j < 9; j++) {
+			if (sdk[i][j] != 0)
+				ctx.fillText (sdk[i][j], xPos + (j+0.5) * inDelta, yPos + (i+0.75) * inDelta);
+		}
+	}
+	ctx.stroke ();
+}
+			</script>
+	</body>
+</html>
+	

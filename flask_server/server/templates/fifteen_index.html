@@ -19,12 +19,13 @@
 
 
 	<body>
-		
-	<div>
-		<canvas id="canvas"></canvas>
-	</div>	
-		<script>
-// Initial set-up of the game
+			
+		<div>
+			<canvas id="fifteen_canvas"></canvas>
+		</div>	
+			<script src="https://code.jquery.com/jquery-3.6.3.slim.min.js"></script>
+			<script>
+// Initial set-up of the 15 puzzle
 const orig_moves = {{ moves }};              // Amount of moves user has
 const orig_layout = {{ original_layout }};   // Initial board as 1d array
 
@@ -40,7 +41,7 @@ var moves = orig_moves;
 var idiot = to_str ();
 
 // Canvas element
-const canvas = document.getElementById("canvas");
+const canvas = $('#fifteen_canvas')[0];
 
 // Position of puzzle on the screen
 var xPos, yPos;
@@ -73,6 +74,7 @@ canvas.addEventListener("click", function (e) {
 	register_click (e);
 });
 
+
 // Checks if user clicked on adjacent tile and invokes move() in the right direction
 function register_click (event) {
 	// Supposingly fixes violent clicking problem
@@ -101,6 +103,7 @@ function register_click (event) {
 			move (3);
 	}
 }
+
 
 // Swaps the blank tile with the adjacent tile in the given direction
 // 0 - top, 1 - bot, 2 - left, 3 - right
@@ -136,7 +139,7 @@ function move (dir) {
 
 
 // Executes code once the page has loaded
-document.addEventListener("DOMContentLoaded", function () {
+$(document).ready(function () {
 	update_canvas ();
 	draw_puzzle ();
 });
@@ -154,12 +157,13 @@ function update_canvas () {
 
 
 // Executes code once the window has been resized
-window.addEventListener("resize", function () {
+$(window).resize( function () {
 	if (solved) return;
 	
 	update_canvas ();
 	draw_puzzle ();
 });
+
 
 // Checks if puzzle is solved
 function check_completion () {
@@ -173,7 +177,7 @@ function check_completion () {
 	const data = { left : moves, check : idiot };
 	
 	fetch("/fifteen", {
-		headers: {
+		headers : {
 			'Content-Type' : 'application/json'
 		},
 		method : 'POST',
@@ -214,6 +218,7 @@ function check_completion () {
 		console.log(error);
 	});
 }
+
 
 // Main function - draws the current state of the puzzle
 function draw_puzzle (to_print = moves + " moves left.") {
