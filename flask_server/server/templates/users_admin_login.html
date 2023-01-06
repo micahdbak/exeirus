@@ -1,0 +1,14 @@
+{% extends 'users.html' %}
+{% block title %}Admin Login{% endblock %}
+{% block content %}
+{% if message != None %}
+<div class="message">
+	<p>{{ message }}</p>
+</div>
+{% endif %}
+<h3>Admin Password</h3>
+<form method="post">
+	<input name="password" id="password" required>
+	<input type="submit" value="Submit">
+</form>
+{% endblock %}

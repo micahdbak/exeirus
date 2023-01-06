@@ -1,0 +1,18 @@
+{% extends 'users.html' %}
+{% block title %}Register User{% endblock %}
+{% block content %}
+<h2>Enter Your Name</h2>
+<div class="links">
+	<a href="{{ url_for('users.leaderboard') }}">Return</a>
+</div>
+{% if message != None %}
+<div class="message">
+	<p>{{ message }}</p>
+</div>
+{% endif %}
+<form method="post">
+	<input name="username" id="username" required>
+	<br>
+	<input type="submit" value="Register">
+</form>
+{% endblock %}

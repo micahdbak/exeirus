@@ -8,10 +8,9 @@ def create_app (config=None):
     #
 
     app = Flask(__name__, template_folder='./templates')
-    app.config.from_mapping(
-        SECRET_KEY='dev',
-        DATABASE=os.path.join(app.instance_path, 'server.sqlite')
-    )
+
+    # This is a terrible cryptographic key. Please set it in config.py.
+    app.secret_key = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
 
     if config is None:
         app.config.from_pyfile('config.py', silent=True)
@@ -46,14 +45,4 @@ def create_app (config=None):
     
     sudoku.sudoku(app)
 
-    #
-    # Database
-    #
-
-    from . import db
-    db.init_app(app)
-
     return app
-
-if __name__ == '__main__':
-    create_app().run()

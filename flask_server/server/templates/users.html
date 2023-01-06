@@ -1,0 +1,15 @@
+<!doctype html>
+<html>
+	<head>
+		<title>{% block title %}{% endblock %}</title>
+		<link rel="stylesheet" href="{{ url_for('static', filename='users.css') }}">
+	</head>
+	<body>
+		<div class="page">
+			<div class="banner">
+				<img src="{{ url_for('static', filename='wasp.png') }}">
+			</div>
+			{% block content %}{% endblock %}
+		</div>
+	</body>
+</html>
