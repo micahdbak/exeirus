@@ -1,4 +1,7 @@
+bin/
 venv/
 
 *.pyc
 __pycache__
+
+puzzle.txt
