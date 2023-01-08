@@ -40,7 +40,7 @@ def sudoku (app, url, sol):
 
             return {
                 'state' : rspn,
-                'link' : 'https://youtu.be/tMB4knXZNHM?t=4'
+                'link' : f'{request.url}/{sol}' if rspn == 'Solved' else 'https://youtu.be/tMB4knXZNHM?t=4'
             }
 
         return render_template('sudoku_index.html',

@@ -39,17 +39,12 @@ def fifteen (app, url, sol):
             # Sending the message to JavaScript about validity with the link to redirect to
             return {
                 'state': rspn,
-                'link': f'{request.url}/{key}' if rspn == "Allowed" else 'https://youtu.be/P8fovVJ17GE?t=6'
+                'link': f'{request.url}/{sol}' if rspn == "Allowed" else 'https://youtu.be/P8fovVJ17GE?t=6'
             }
 
         return render_template('fifteen_index.html',
                                moves=moves,
                                original_layout=orig_layout)
-
-    # Page that user is redirected to upon completion
-    @app.route(f'/{url}/{key}')
-    def solved_15 ():
-        return render_template('fifteen_solved.html')
 
 
 def read_15 (filename):

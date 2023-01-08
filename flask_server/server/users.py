@@ -10,9 +10,10 @@ allow_create = True
 
 bp = Blueprint('users', __name__, url_prefix='/users')
 
+
 class User:
-    def __init__(self, username):
-        self.username = username
+    def __init__(self, _username):
+        self.username = _username
         self.completed = dict()
 
     def score(self):
@@ -26,6 +27,7 @@ class User:
 
 users = list()
 
+
 # djb2 hashing algorithm
 # http://www.cse.yorku.ca/~oz/hash.html
 def djb2(name):
@@ -37,6 +39,7 @@ def djb2(name):
     # hexadecimal from 0..65536 has 4 characters
     return hex(val % 65536)
 
+
 @bp.route('/leaderboard', methods = ['GET'])
 def leaderboard():
     # users.sort(key=lambda u: u.score())
@@ -44,11 +47,12 @@ def leaderboard():
     return render_template('users_leaderboard.html',
                            users=users)
 
+
 @bp.route('/create', methods = ['GET', 'POST'])
 def create():
     message = None
 
-    if allow_create == False:
+    if not allow_create:
         message = 'The period for registering has passed.'
 
     if request.method == 'POST' and allow_create == True:
@@ -75,6 +79,7 @@ def create():
     return render_template('users_create.html',
                            message=message)
 
+
 @bp.route('/admin_login', methods = ['GET', 'POST'])
 def admin_login():
     message = None
@@ -90,6 +95,7 @@ def admin_login():
             message = 'Incorrect password.'
 
     return render_template('users_admin_login.html', message=message)
+
 
 @bp.route('/admin', methods = ['GET', 'POST'])
 def admin():
@@ -107,7 +113,7 @@ def admin():
         if request.form['permit'] == 'yes':
             allow_create = True
         else:
-            allow_create = True
+            allow_create = False
 
         if request.form['logout'] == 'yes':
             session.pop('admin')

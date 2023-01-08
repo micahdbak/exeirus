@@ -35,20 +35,20 @@ def create_app ():
     app.register_blueprint(users.bp)
 
     #
+    # Sudoku
+    #
+
+    from . import sudoku
+
+    sudoku.sudoku(app, SUDOKU_URL, FIFTEEN_URL)
+
+    #
     # 15_Puzzle
     #
 
     from . import fifteen
 
-    fifteen.fifteen(app, FIFTEEN_URL, SUDOKU_URL)
-    
-    #
-    # Sudoku
-    #
-    
-    from . import sudoku
-    
-    sudoku.sudoku(app, SUDOKU_URL, COMPLETION_URL)
+    fifteen.fifteen(app, FIFTEEN_URL, COMPLETION_URL)
 
     #
     # Completion
@@ -59,3 +59,7 @@ def create_app ():
         return render_template('completion.html')
 
     return app
+
+
+if __name__ == '__main__':
+    create_app().run()
