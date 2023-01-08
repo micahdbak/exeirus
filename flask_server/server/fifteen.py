@@ -3,7 +3,7 @@ import copy, os, random, string
 
 
 # Main func - creates the page for the puzzle
-def fifteen (app):
+def fifteen (app, url, sol):
     # Run the ./bin/15_puzzle program on start, so that ./puzzle.txt exists.
     try:
         os.system('./bin/15_puzzle')
@@ -19,7 +19,7 @@ def fifteen (app):
     key = init_vals[2]
 
     # Main page of 15 puzzle
-    @app.route('/fifteen', methods=["GET", "POST"])
+    @app.route(f'/{url}', methods=["GET", "POST"])
     def start_15 ():
         # Receiving the message from JavaScript about possible completion
         if request.method == "POST":
@@ -47,7 +47,7 @@ def fifteen (app):
                                original_layout=orig_layout)
 
     # Page that user is redirected to upon completion
-    @app.route(f'/fifteen/{key}')
+    @app.route(f'/{url}/{key}')
     def solved_15 ():
         return render_template('fifteen_solved.html')
 

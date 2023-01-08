@@ -1,7 +1,17 @@
 import os
-from flask import Flask, render_template, request
+from flask import Flask, render_template
 
-def create_app (config=None):
+SECRET_KEY     = "aiusdfasdifiasdiufasdf"
+
+CIPHERHELL_URL = "cipherhell"
+FIFTEEN_URL    = "fifteen"
+SUDOKU_URL     = "sudoku"
+HAMMING_URL    = "hamming"
+BRAINHECK_URL  = "brainheck"
+
+COMPLETION_URL = "completion"
+
+def create_app ():
 
     #
     # Flask server
@@ -9,13 +19,7 @@ def create_app (config=None):
 
     app = Flask(__name__, template_folder='./templates')
 
-    # This is a terrible cryptographic key. Please set it in config.py.
-    app.secret_key = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
-
-    if config is None:
-        app.config.from_pyfile('config.py', silent=True)
-    else:
-        app.config.from_mapping(config)
+    app.secret_key = SECRET_KEY
 
     try:
         os.makedirs(app.instance_path)
@@ -27,6 +31,7 @@ def create_app (config=None):
     #
 
     from . import users
+
     app.register_blueprint(users.bp)
 
     #
@@ -35,7 +40,7 @@ def create_app (config=None):
 
     from . import fifteen
 
-    fifteen.fifteen(app)
+    fifteen.fifteen(app, FIFTEEN_URL, SUDOKU_URL)
     
     #
     # Sudoku
@@ -43,6 +48,14 @@ def create_app (config=None):
     
     from . import sudoku
     
-    sudoku.sudoku(app)
+    sudoku.sudoku(app, SUDOKU_URL, COMPLETION_URL)
+
+    #
+    # Completion
+    #
+
+    @app.route(f'/{COMPLETION_URL}')
+    def completion():
+        return render_template('completion.html')
 
     return app

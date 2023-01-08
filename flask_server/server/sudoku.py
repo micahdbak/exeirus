@@ -3,7 +3,7 @@ import os, random, string
 
 
 # Main func - creates the page for sudoku
-def sudoku (app):
+def sudoku (app, url, sol):
     # Run the ./bin/sdk program on start, so that ./sudoku.txt exists
     try:
         os.system('./bin/sdk')
@@ -18,7 +18,7 @@ def sudoku (app):
     key = init_vals[2]
     
     # Main page of sudoku
-    @app.route('/sudoku', methods=["GET", "POST"])
+    @app.route(f'/{url}', methods=["GET", "POST"])
     def start_sudoku ():
         if request.method == "POST":
             json_data = request.get_json()
