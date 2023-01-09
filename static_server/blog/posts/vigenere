@@ -1,0 +1,44 @@
+Vigenere Ciphers
+C555
+1 26 12 2022
+Dear $EXEIRUS$,
+\P
+Another famous type of cipher is the Vigenère cipher.
+It was originally created by Giovan Battista Bellaso in 1553, but his work is misattributed to Blaise de Vigenère, who also created the autokey cipher in the 16th century, explaining its name.\n
+It is not the easiest cipher to crack, but neither the hardest.
+\P
+Here is the basic mechanism behind this cipher : Polyalphabetic substitution.\n
+In simple words, a text is encrypted using a key, which is a word (sequence of alphabets). \n
+Each letter of the text is shifted by corresponding value of the key to encrypt the message and to decrypt, the ciphertext is shifted backwards with the key to get the original text.
+\P
+How to shift the alphabets of the text using alphabets of the key you may ask. Here is an example:\n
+\P
+Suppose you want to encrypt the message “history is a mystery!” . Let the key be “hello”.\n
+Here is how you can do it: \n
+\(L
+h i s t o r  y   i s   a   m y s t e r y ! \n
+h e l l o h e l l o h e l l o h e l l o h \n 
+\)L
+\P
+The numerical equivalent of these characters are:
+\P
+ \(m\(L
+7 8 18 19 14 17 24 8 18 0 12 24 18 19 4 17 24\n
+7 4 11 11 14 7 4 11 11 14 7 4 11 11 14 7 4 11 11\n
+\)L\)m
+\P
+Now just add them all up to get:\n
+\(m\(L14 12 3 4 2 24 2 19 3 14 19 2 3 4 18 24 2\)L\)m\n
+Which is \(i“omdecyc td o tcdesyc!”\)i : the encrypted text.\n
+\P
+Done! Just make the key as long as the text and do some calculations to encrypt it.\n
+Fancy isnt it?\n
+\P
+Similarly if you want to decode “omdecyc td o tcdesyc!” with the key “hello”, you subtract the numbers and you will get the plain text “history is a mystery!”
+\P
+\(b\(iNote\)i\)b : The character set we use as a standard for ciphers is the lowercase english alphabets. Anything else like spaces, symbols and uppercase will remain as it is.\n
+So if you get a number higher than 25 or lower than 0, you take the modulo and make it so that it lies between 0-25, corresponding to a character from the character set.
+\P
+This is called the keyword method to solve the Vigenère cipher, where you know the key and have some sort of text to encrypt or decrypt. 
+\P
+Pretty easy isn't it! But the question is, do you know the key?
