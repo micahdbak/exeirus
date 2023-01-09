@@ -20,9 +20,12 @@ int main(void)
 	     "3: Base-10\n"
 	     "4: Base-8\n"
 	     "5: Base-2\n"
-	     "6: Alphanumeric Characters\n";
+	     "6: Alphabetical\n"
+	     "7: Alphanumeric\n"
+	     "8: Alphanumeric (Case Sensitive)\n"
+	     "9: ASCII Symbols\n";
 	const char *chars[] = {
-		CS_64, CS_32, CS_hex, CS_dec, CS_oct, CS_bin, CS_AN
+		CS_64, CS_32, CS_hex, CS_dec, CS_oct, CS_bin, CS_alp, CS_an, CS_anc, CS_asc
 	};
 	int choice = 0, nchars, len, i;
 

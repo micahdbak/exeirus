@@ -11,7 +11,7 @@
 
 #include "charsets.h"
 
-#undef DEBUG
+#define DEBUG
 
 #define NAN  (~0)
 
@@ -46,7 +46,7 @@ void print_help(FILE *file)
 
 		"\t[mode]: [encode/decode]\n"
 		"\t\tThe mode must be specified. This lets the program know if\n"
-		"\t\tit is to [encrypt] or [decrypt] the input-text.\n\n"
+		"\t\tit is to [add] or [sub]tract from the input-text.\n\n"
 
 		"\t[input-text]\n"
 		"\t\tThis is the text that strcon will work on.\n\n"
@@ -235,7 +235,8 @@ int main(int argc, char **argv)
 				   // charj: secondary occurrence of (chari).
 	    i, j,                  // i, j: indices used in for loops
 	    shift,                 // shift: caesar cipher shift value
-	    ascii;                 // ASCII: character set is ascii
+	    ascii,                 // ASCII: character set is ascii
+	    numerical;             // numerical: whether or not the input is numerical
 	enum mode {
 		UNSET = -1,
 		ENCODE = 0,
@@ -261,29 +262,31 @@ int main(int argc, char **argv)
 	ascii = 0;
 
 	// check if the provided character set is actually a request for a predetermined one
-	switch (for_arr(charset, 10,
+	switch (for_arr(charset, 11,
 	                "--64",   // CS_64
-			"--u32",  // CS_32
-			"--l32",  // cs_32
-			"--abc",  // cs_26
-			"--hex",  // CS_hex
+			"--32",   // CS_32
+			"--hex",  // cs_hex
 			"--dec",  // CS_dec
 			"--oct",  // CS_oct
 			"--bin",  // CS_bin
-			"--AN",   // CS_AN
+			"--alp",  // CS_alp
+			"--an",   // CS_an
+			"--anc",  // CS_anc
+			"--asc",  // CS_asc
 			"--ascii"))
 	{
 	// switch for the option
 	case 0:  strcpy(charset, CS_64);   break;
 	case 1:  strcpy(charset, CS_32);   break;
-	case 2:  strcpy(charset, cs_32);   break;
-	case 3:  strcpy(charset, cs_26);   break;
-	case 4:  strcpy(charset, CS_hex);  break;
-	case 5:  strcpy(charset, CS_dec);  break;
-	case 6:  strcpy(charset, CS_oct);  break;
-	case 7:  strcpy(charset, CS_bin);  break;
-	case 8:  strcpy(charset, CS_AN);   break;
-	case 9:
+	case 2:  strcpy(charset, CS_hex);  break;
+	case 3:  strcpy(charset, CS_dec);  break;
+	case 4:  strcpy(charset, CS_oct);  break;
+	case 5:  strcpy(charset, CS_bin);  break;
+	case 6:  strcpy(charset, CS_alp);  break;
+	case 7:  strcpy(charset, CS_an);   break;
+	case 8:  strcpy(charset, CS_anc);  break;
+	case 9:  strcpy(charset, CS_asc);  break;
+	case 10:
 		 // set the character set to ASCII
 		 ascii = 1;
 
@@ -297,10 +300,17 @@ int main(int argc, char **argv)
 	// set (nchars) to the length of (charset)
 	nchars = strlen(charset);
 
+#ifdef DEBUG
+	if (ascii == 1)
+		fprintf(stderr, "Operating with ASCII characters.\n");
+	else
+		fprintf(stderr, "Got character set of size %d, with characters %s.\n", nchars, charset);
+#endif
+
 	if (argi == argc)
 		fail("Not enough arguments provided.\n\n");
 
-	// get the whether strcon is to encode or decode
+	// get the whether strcon is to add or subtract
 	mode = for_arr(argv[argi++], 2, "encode", "decode");
 
 	if (mode == UNSET)
@@ -334,11 +344,11 @@ int main(int argc, char **argv)
 	                "Got base type %d.\n\n", base);
 #endif
 
-	if (base == INVALID)
-		fail("Invalid base.\n");
-
 	if (argi == argc)
 		fail("Not enough arguments provided.\n\n");
+
+	if (base == INVALID)
+		fail("Invalid base.\n");
 
 	// read the cipher
 	choice = for_arr(argv[argi++], 3, "none", "caesar", "vigenere");
@@ -359,7 +369,7 @@ int main(int argc, char **argv)
 	else
 		choice = choice == 1 ? CAESAR : VIGENERE;
 
-	// if strcon is decoding, and the input is of a numerical sort...
+	// if the input is of a numerical sort...
 	if (mode == DECODE && base != TEXT)
 	{
 		// ...prepare a list of integer values from the input
@@ -384,7 +394,7 @@ int main(int argc, char **argv)
 		fprintf(stderr, "Got caesar shift %d.\n\n", shift);
 	#endif
 
-		// encode the input text
+		// add to the input text
 		if (mode == ENCODE)
 		{
 			// for every character in (arr)
@@ -596,13 +606,14 @@ int main(int argc, char **argv)
 
 					// subtract (charj) from (chari)
 					chari -= charj;
-					// ensure that (chari) is from -(nchars) to (nchars)
+					// ensure that (chari) is within the bounds 0 to (nchars)
 					chari %= nchars;
 
-					// if (chari) is less than zero...
+					// check if chari is less than zero...
 					if (chari < 0)
-						// ...set it to its equivalent positive form
+						// ...add nchars to it
 						chari += nchars;
+
 
 					// print the character in (charset) at (chari)
 					putc(charset[chari], stdout);
@@ -622,12 +633,12 @@ int main(int argc, char **argv)
 
 					// subtract (charj) from (chari)
 					chari -= charj;
-					// ensure that (chari) is from -(nchars) to (nchars)
+					// ensure that (chari) is within the bounds 0 to (nchars)
 					chari %= nchars;
 
-					// if chari is less than zero...
+					// check if chari is less than zero...
 					if (chari < 0)
-						// ...set it to its equivalent positive form
+						// ...add nchars to it
 						chari += nchars;
 
 					// print the character in (charset) at (chari)
