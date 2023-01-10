@@ -15,17 +15,26 @@ a {
 
 span.monospace {
 	font-family: monospace;
-	color: lightgreen;
+	color: #c0c0c0;
 }
 span.monospace b {
 	color: white;
 }
+
 span.important {
 	padding: 2px;
 	border-radius: 8px;
 	background-color: red;
 	color: yellow;
 	font-style: normal;
+}
+
+pre.monospace {
+	font-family: monospace;
+	color: #c0c0c0;
+}
+pre.monospace b {
+	color: white;
 }
 
 .page {

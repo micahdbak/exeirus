@@ -29,7 +29,7 @@ Your wit is yet to be rewarded.
 
 Behold, a key:
 
-3:MMYYY6sV
+7:zoizymce
 
                   _                 ___ ____ ____ ____  
   /\\  /\\__ _  ___| | _____ _ __    / __\\ ___| ___| ___| 
@@ -48,9 +48,9 @@ The characters following the colon is the content of the \(bkey\)b itself.
 Suppose that you have found the following \(bkeys\)b:
 \P
 \(m
-1:a1b2c3d4\n
-<span style="color:#7dd">2:e5f6g7h8</span>\n
-<span style="color:#dd7">3:i9j0k1l2</span>\n
+1:a1b2c3d4
+<span style="color:#7dd">2:e5f6g7h8</span>
+<span style="color:#dd7">3:i9j0k1l2</span>
 <span style="color:#d7d">4:m3n4o5p6</span>
 \)m
 \P

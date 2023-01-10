@@ -22,45 +22,45 @@ The parity for an even block is 0, and the parity for an odd block is 1.
 \P
 For example, given the block
 \P
-\(m\(L
-- 1 0 1\n
-1 0 1 0\n
-0 1 0 1\n
-1 0 1 0\n
-\)L\)m
+\(M
+- 1 0 1
+1 0 1 0
+0 1 0 1
+1 0 1 0
+\)M
 \P
 There are 8 1s, which is even.
 So therefore the parity of this block is 0.
 This block then becomes
 \P
-\(m\(L
-- 1 0 1\n
-1 0 1 0\n
-0 1 0 1\n
-1 0 1 0\n
-\)L\)m
+\(M
+- 1 0 1
+1 0 1 0
+0 1 0 1
+1 0 1 0
+\)M
 \P
 As the parity bit is set.
 \P
 However, imagine that the following block is given.
 \P
-\(m\(L
-- 1 0 1\n
-1 0 1 0\n
-0 1 0 1\n
-0 0 1 0\n
-\)L\)m
+\(M
+- 1 0 1
+1 0 1 0
+0 1 0 1
+0 0 1 0
+\)M
 \P
 There are 7 1s, which is odd.
 The parity of this block is 1, so the parity bit would be set to 1.
 The block now becomes
 \P
-\(m\(L
-1 1 0 1\n
-1 0 1 0\n
-0 1 0 1\n
-0 0 1 0\n
-\)L\)m
+\(M
+1 1 0 1
+1 0 1 0
+0 1 0 1
+0 0 1 0
+\)M
 \P
 Which, conveniently, now has 8 1s.
 This is the purpose of the parity bit for a given block;
@@ -93,39 +93,39 @@ then the corrupted bit must be in that region.
 Looking back to \(bFig. 1\)b, we can see that for a Hamming code of 16 bits we can transmit 11 bits of data.
 Suppose that our data is
 \P
-\(m\(L
+\(M
 1 1 0 1 1 0 0 1 1 1 0
-\)L\)m
+\)M
 \P
 Then we can arrange these bits to create a Hamming code (the sender's job):
 \P
-\(m\(L
-- - - 1\n
-- 1 0 1\n
-- 1 0 0\n
+\(M
+- - - 1
+- 1 0 1
+- 1 0 0
 1 1 1 0
-\)L\)m
+\)M
 \P
 Starting by solving each parity bit with respect to its region, we get the incomplete Hamming code:
 \P
-\(m\(L
-- 1 1 1\n
-1 1 0 1\n
-0 1 0 0\n
+\(M
+- 1 1 1
+1 1 0 1
+0 1 0 0
 1 1 1 0
-\)L\)m
+\)M
 \P
 Then, we set the first bit to be the entire block's parity,
 thereby ensuring the total count of 1s is even.
 The count of 1s is 10, which is even, so the parity bit should be set to 0.
 Our final Hamming code is:
 \P
-\(m\(L
-0 1 1 1\n
-1 1 0 1\n
-0 1 0 0\n
+\(M
+0 1 1 1
+1 1 0 1
+0 1 0 0
 1 1 1 0
-\)L\)m
+\)M
 \P
 Perfect!
 Now, suppose that computer A sends this Hamming code to computer B;
@@ -133,12 +133,12 @@ but, one of the bits is corrupted.
 The Hamming code that computer B receives is the following,
 where the underlined bit is the one that was corrupted:
 \P
-\(m\(L
-0 1 1 1\n
-1 1 0 1\n
-0 1 \(u1\)u 0\n
+\(M
+0 1 1 1
+1 1 0 1
+0 1 \(u1\)u 0
 1 1 1 0
-\)L\)m
+\)M
 \P
 First, computer B will notice that there are 11 1s in the data it received, which is odd.
 It must be that a bit was corrupted!
@@ -150,78 +150,84 @@ either the parity bit's region is eligible if its region is odd,
 or the outside region is eligible if its region is even),
 computer B will see that the following columns are eligible:
 \P
-\(m\(L
-\(b0\)b \(i1\)i \(b1\)b 1\n
-\(b1\)b 1 \(b0\)b 1\n
-\(b0\)b 1 \(b\(u1\)u\)b 0\n
+\(M
+\(b0\)b \(i1\)i \(b1\)b 1
+\(b1\)b 1 \(b0\)b 1
+\(b0\)b 1 \(b\(u1\)u\)b 0
 \(b1\)b 1 \(b1\)b 0
-\)L\)m
+\)M
 \P
 And
 \P
-\(m\(L
-0 1 \(b\(i1\)i 1\)b\n
-1 1 \(b0 1\)b\n
-0 1 \(b\(u1\)u 0\)b\n
+\(M
+0 1 \(b\(i1\)i 1\)b
+1 1 \(b0 1\)b
+0 1 \(b\(u1\)u 0\)b
 1 1 \(b1 0\)b
-\)L\)m
+\)M
 \P
 Which can only be the column:
 \P
-\(m\(L
-0 1 \(b1\)b 1\n
-1 1 \(b0\)b 1\n
-0 1 \(b\(u1\)u\)b 0\n
+\(M
+0 1 \(b1\)b 1
+1 1 \(b0\)b 1
+0 1 \(b\(u1\)u\)b 0
 1 1 \(b1\)b 0
-\)L\)m
+\)M
 \P
 Making the same observations for the remaining parity bits:
 \P
-\(m\(L
-\(b0 1 1 1\)b\n
-\(i1\)i 1 0 1\n
-\(b0 1 \(u1\)u 0\)b\n
+\(M
+\(b0 1 1 1\)b
+\(i1\)i 1 0 1
+\(b0 1 \(u1\)u 0\)b
 1 1 1 0
-\)L\)m
+\)M
 \P
 And
 \P
-\(m\(L
-0 1 1 1\n
-1 1 0 1\n
-\(b\(i0\)i 1 \(u1\)u 0\)b\n
+\(M
+0 1 1 1
+1 1 0 1
+\(b\(i0\)i 1 \(u1\)u 0\)b
 \(b1 1 1 0\)b
-\)L\)m
+\)M
 \P
 Which can only be the row:
 \P
-\(m\(L
-0 1 1 1\n
-1 1 0 1\n
-\(b0 1 \(u1\)u 0\)b\n
+\(M
+0 1 1 1
+1 1 0 1
+\(b0 1 \(u1\)u 0\)b
 1 1 1 0
-\)L\)m
+\)M
 \P
 Combining these observations,
 knowing that the intersection of these eligible regions is the area where the corrupted bit may be,
 there is only one position that the corrupted bit can be:
 \P
-\(m\(L
-0 1 1 1\n
-1 1 0 1\n
-0 1 \(b\(u1\)u\)b 0\n
+\(M
+0 1 1 1
+1 1 0 1
+0 1 \(b\(u1\)u\)b 0
 1 1 1 0
-\)L\)m
+\)M
 \P
 And so computer B switches this bit, and is happy with its valid data,
 the data that computer A intended for computer B to receieve:
 \P
-\(m\(L
-0 1 1 1\n
-1 1 0 1\n
-0 1 0 0\n
+\(M
+0 1 1 1
+1 1 0 1
+0 1 \(b0\)b 0
 1 1 1 0
-\)L\)m
+\)M
 \P
-
+Do consider, however, that Hamming codes may not be displayed as blocks.
+Rather, they will be represented as a series of bits.
+The arranging of bits into blocks is simply for the visual representation of how Hamming codes work.
+\P
+A helpful source for learning more about Hamming codes can be found here:
+\(ahttps://www.youtube.com/watch?v=X8jsijhllIA\)a.
+\P
 Happy hacking.

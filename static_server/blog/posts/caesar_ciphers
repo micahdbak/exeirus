@@ -14,11 +14,7 @@ Its numerical value is given by its position in a character set.
 \P
 Let us create a Caesar cipher for example.\n
 Our character set will be the following:\n
-\P
-\(m
-\(m17 14 21 21 24\)m (space) \(m6 24 1 21 13\)m
-abcdefghijklmnopqrstuvwxyz
-\)m
+\(mabcdefghijklmnopqrstuvwxyz\)m
 \P
 This character set has 26 characters in it,
 and each of these characters has an index representing its position in the character set.

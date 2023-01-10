@@ -33,8 +33,11 @@
 #define UNDER_START   "<u>"
 #define UNDER_END     "</u>"
 
-#define MONO_START    "<span class=\"monospace\" style=\"font-family: monospace;\">"
+#define MONO_START    "<span class=\"monospace\">"
 #define MONO_END      "</span>"
+
+#define PRE_START     "<pre class=\"monospace\">"
+#define PRE_END       "</pre>"
 
 #define LARGE_START   "<span style=\"font-size: 16pt\">"
 #define LARGE_END     "</span>"
@@ -43,7 +46,7 @@
 #define SMALL_END     "</span>"
 
 #define URL_START     "<a href=\""
-#define URL_END       "\">Click Here</a>"
+#define URL_END       "\">External Link</a>"
 
 // data regarding a list of posts
 struct post
@@ -560,6 +563,12 @@ int main(int argc, char **argv)
 							case 'm':
 								if (isStart)  fprintf(dest, MONO_START);
 								else          fprintf(dest, MONO_END);
+
+								break;
+							// pre-formatted text
+							case 'M':
+								if (isStart)  fprintf(dest, PRE_START);
+								else          fprintf(dest, PRE_END);
 
 								break;
 							// large text
