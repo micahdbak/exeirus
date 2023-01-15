@@ -1,13 +1,14 @@
 /**************************************************
  * hamming:  A Hamming code encoding and decoder. *
  * Author:   Micah Baker                          *
- * Date:     11/01/2023                           *
+ * Date:     14/01/2023                           *
  **************************************************/
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <stdint.h>
 #include <ctype.h>
+#include <time.h>
 
 /* The bit mask at area[i] is the parity bit's respective
  * area (at bit position 2^i) of a given block. */
@@ -257,7 +258,9 @@ char *decode_blocks(uint16_t *blocks, int n)
 {
 	char *binary, *r;
 	int i, j, k,
-	    sz;
+	    sz,
+	    x;
+	uint16_t bit;
 
 	// there are 11 data bits for every block
 	binary = calloc(n * 11, sizeof(char));
@@ -270,7 +273,33 @@ char *decode_blocks(uint16_t *blocks, int n)
 		// block is damaged
 		if ((count1s(blocks[i]) % 2) != 0)
 		{
-			// repair
+			// repair the block
+
+			bit = ~(uint16_t)0;
+
+			// for every bit in the block
+			for (j = 1; j < 16; ++j)
+			{
+				x = is_po2(j);
+
+				if (x == -1)
+					// skip bits that are not a power of two
+					continue;
+
+				// this bit is a parity bit
+
+				if ((count1s(blocks[i] & area[x]) % 2) != 0)
+					// if the count of 1s in this area isn't even,
+					// then the damaged bit is in this area
+					bit &= area[x];
+				else
+					// if the count of 1s in this area is even,
+					// then the damaged bit is not in this area
+					bit -= bit & area[x];
+			}
+
+			// ^ the block at this bit such that it will be switched
+			blocks[i] ^= bit;
 		}
 
 		// for every bit in this block
@@ -318,11 +347,23 @@ char *decode_blocks(uint16_t *blocks, int n)
 	return r;
 }
 
+void damage_blocks(uint16_t *blocks, int n)
+{
+	int i;
+
+	// for every block in [blocks]
+	for (i = 0; i < n; ++i)
+		// switch a random bit
+		blocks[i] ^= 0b1 << (rand() % 16);
+}
+
 int main(int argc, char **argv)
 {
 	char *binary, *text;
 	uint16_t *blocks;
 	int i, n;
+
+	srand(time(0));
 
 	if (argc == 1)
 	{
@@ -342,6 +383,8 @@ int main(int argc, char **argv)
 
 		binary = to_binary(argv[2]);
 		blocks = to_blocks(binary, &n);
+
+		damage_blocks(blocks, n);
 
 		for (i = 0; i < n; ++i)
 		{
@@ -367,7 +410,7 @@ int main(int argc, char **argv)
 
 		n = atoi(argv[2]);
 
-		printf("Please enter ten blocks.\n> ");
+		printf("Please enter %d blocks.\n> ", n);
 
 		blocks = read_blocks(n);
 		text = decode_blocks(blocks, n);
