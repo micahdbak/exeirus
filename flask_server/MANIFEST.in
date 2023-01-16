@@ -1,0 +1,2 @@
+graft cicada/templates
+global-exclude *.pyc

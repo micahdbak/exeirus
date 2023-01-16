@@ -1,7 +1,7 @@
 import os
 from flask import Flask, render_template
 
-from . import users, sudoku, fifteen
+from . import sudoku, fifteen
 
 SECRET_KEY     = "7NfBbChMw5Ohbi3Q8F4iaWjM5NYhgNbd"
 
@@ -11,8 +11,6 @@ FIFTEEN_URL    = "3OmkQIBYljHwmpSohYRodNbMg7TaW3aB"
 HAMMING_URL    = "XSFbPBiLajR1hYLbpFZ5FW3J6KAJfNU6"
 BRAINHECK_URL  = "HuvBf1XusCiOSXZWoAkD7HC5Z7H06TNp"
 COMPLETION_URL = "UNqtb4VnMRuvlyV2oUnMrde9n6bC69Eh"
-
-PORT = 3141
 
 def create_app ():
 
@@ -29,6 +27,7 @@ def create_app ():
     except OSError:
         pass
 
+    # Entry Point
     @app.route(f'/{ENTRY_URL}/index.html')
     def entry():
         return render_template('entry.html')
@@ -55,6 +54,3 @@ def create_app ():
         return render_template('completion.html')
 
     return app
-
-if __name__ == '__main__':
-    create_app().run(host='0.0.0.0', port=PORT)
