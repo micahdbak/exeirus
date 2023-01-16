@@ -1,3 +1,6 @@
 bin
 blog/docs
 tele/docs
+
+
+htdocs/**/*.html

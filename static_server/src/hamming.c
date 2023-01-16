@@ -136,7 +136,7 @@ void print_block(uint16_t block)
 }
 
 // convert a binary array to a sequence of Hamming code blocks
-uint16_t *to_blocks(char *binary, int *nref)
+uint16_t *to_blocks(char *binary, int *nptr)
 {
 	int len,
 	    i, j, k,
@@ -147,18 +147,18 @@ uint16_t *to_blocks(char *binary, int *nref)
 	// allocate the correct number of blocks
 
 	len = strlen(binary);
-	*nref = len / 11;
+	*nptr = len / 11;
 
 	if (len % 11 != 0)
-		++(*nref);
+		++(*nptr);
 
-	blocks = calloc(*nref, sizeof(uint16_t));
+	blocks = calloc(*nptr, sizeof(uint16_t));
 
 	k = 0;
 
 	// for every block
 
-	for (i = 0; i < *nref; ++i)
+	for (i = 0; i < *nptr; ++i)
 	{
 		// set all bits to 0
 		blocks[i] = 0;
@@ -212,39 +212,46 @@ uint16_t *to_blocks(char *binary, int *nref)
 	return blocks;
 }
 
-// read [n] blocks from [stdin]
-uint16_t *read_blocks(int n)
+// read blocks from [stdin]
+uint16_t *read_blocks(int *nptr)
 {
+	/* Arbitrary maximum of 1024.
+	 * Increase if necessary. */
+	char raw[1024];
 	uint16_t *r;
-	int c, i;
+	int c, n,
+	    i, j;
+
+	c = getc(stdin);
+
+	for (i = 0; c != '\n' && c != EOF; c = getc(stdin))
+		raw[i++] = c;
+
+	raw[i] = '\0';
+
+	// assumes there are no separating characters, and block size is 16 bits
+	n = i / 16;
+	*nptr = n;
 
 	r = calloc(n, sizeof(uint16_t));
 
 	// prepare first block
 
-	i = 0;
-	r[i] = 0;
+	r[0] = 0;
+	i = -1; // set [i] to -1 because [j] will incrememnt [i] on first loop
+	j = 0;
 
-	c = getc(stdin);
+	// for every character in [raw]
 
-	for (;; c = getc(stdin))
+	c = raw[j++];
+
+	for (; c != '\0'; c = raw[j++])
 	{
-		// spaces separate blocks
-		if (isspace(c))
-		{
+		// incrememnt [i] for every new block
+		if ((j - 1) % 16 == 0)
 			++i;
 
-			// end if all blocks have been read
-			if (i == n)
-				break;
-
-			// prepare the next block
-			r[i] = 0;
-
-			continue;
-		}
-
-		// assume that the input contains 0s and 1s only
+		// assume that [c] is either 0 or 1
 
 		r[i] <<= 1; // shift bits left
 		r[i] |= c - '0'; // read the next bit
@@ -386,33 +393,20 @@ int main(int argc, char **argv)
 
 		damage_blocks(blocks, n);
 
+		// print every block
 		for (i = 0; i < n; ++i)
-		{
 			print_block(blocks[i]);
-			
-			if (i + 1 == n)
-				putc('\n', stdout);
-			else
-				putc(' ', stdout);
-		}
+
+		putc('\n', stdout);
 
 		free(binary);
 		free(blocks);
 	} else
 	if (strcmp(argv[1], "decode") == 0)
 	{
-		if (argc < 3)
-		{
-			printf("Insufficient arguments. Please provide the number of blocks.\n");
+		printf("Please enter your blocks.\n> ");
 
-			return EXIT_FAILURE;
-		}
-
-		n = atoi(argv[2]);
-
-		printf("Please enter %d blocks.\n> ", n);
-
-		blocks = read_blocks(n);
+		blocks = read_blocks(&n);
 		text = decode_blocks(blocks, n);
 
 		printf("%s\n", text);

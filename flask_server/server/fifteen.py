@@ -39,12 +39,13 @@ def fifteen (app, url, sol):
             # Sending the message to JavaScript about validity with the link to redirect to
             return {
                 'state': rspn,
-                'link': f'{request.url}/{sol}' if rspn == "Allowed" else 'https://youtu.be/P8fovVJ17GE?t=6'
+                'link': f'/{sol}' if rspn == "Allowed" else 'https://youtu.be/P8fovVJ17GE?t=6'
             }
 
         return render_template('fifteen_index.html',
                                moves=moves,
-                               original_layout=orig_layout)
+                               original_layout=orig_layout,
+                               url=url)
 
 
 def read_15 (filename):

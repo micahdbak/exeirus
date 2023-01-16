@@ -1,14 +1,15 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, redirect
 import os, random, string
 
 
 # Main func - creates the page for sudoku
 def sudoku (app, url, sol):
     # Run the ./bin/sdk program on start, so that ./sudoku.txt exists
-    try:
-        os.system('./bin/sdk')
-    except OSError:
-        pass
+    if not os.path.exists('./sudoku.txt'):
+        try:
+            os.system('./bin/sdk')
+        except OSError:
+            pass
 
 
     # Read the created ./sudoku.txt file
@@ -38,14 +39,21 @@ def sudoku (app, url, sol):
             except Exception:
                 rspn = "Idiot"
 
-            return {
-                'state' : rspn,
-                'link' : f'{request.url}/{sol}' if rspn == 'Solved' else 'https://youtu.be/tMB4knXZNHM?t=4'
-            }
+            if rspn == 'Solved':
+                return {
+                    'state' : rspn,
+                    'link' : f'/{sol}'
+                }
+            else:
+                return {
+                    'state' : rspn,
+                    'link' : 'https://youtu.be/tMB4knXZNHM?t=4' if rspn == "Idiot" else '/{url}'
+                }
 
         return render_template('sudoku_index.html',
                                original_sudoku=sdk,
-                               pos_mask=mask)
+                               pos_mask=mask,
+                               url=f'/{url}')
 
 
 def read_sudoku (filename):

@@ -1,0 +1,176 @@
+store character set
+
+65  IR  a  upper
+114 IR  r
+101 IR  e
+32  IR
+121 IR  y
+111 IR  o
+117 IR  u
+97  IR  a
+119 IR  w
+105 IR  i
+110 IR  n
+63  IR  ?
+47  IR  /
+62  IR  >
+67  IR  c  upper
+103 IR  g
+116 IR  t
+108 IR  l
+115 IR  s
+46  IR  .
+10  IR  \n
+85  IR  u  upper
+102 IR  f
+66  IR  b  upper
+44  IR  ,
+104 IR  h
+112 IR  p
+58  IR  :
+78  IR  n  upper
+113 IR  q
+98  IR  b
+52  IR  four
+86  IR  v  upper
+77  IR  m  upper
+82  IR  r  upper
+118 IR  v
+50  IR  two
+100 IR  d
+57  IR  nine
+54  IR  six
+69  I   e  upper
+40  L
+
+begin program; print question
+
+    PR  a  upper
+    PR  r
+    PR  e
+    PR
+    PR  y
+    PR  o
+    P   u
+3   LP
+4   RP  a
+4   LP
+5   R
+    PR  w
+    PR  i
+2   P   nn
+8   L
+    PL  e
+    P   r
+10  R
+    P   ?
+8   L
+    PR
+    P   y
+8   RP  /
+2   LP  n
+7   LP
+10  RP  >
+10  LP
+39  R
+
+get player input
+
+121 IR  y
+    S   scan input
+59  J   jump over yes condition
+
+yes condition
+
+    F   flag
+28  LP  C
+9   LP  o
+5   RP  n
+5   RP  g
+14  LP  r
+6   RP  a
+9   RP  t
+10  LP  u
+11  RP  l
+10  LP  a
+9   RP  t
+7   LP  i
+4   LP  o
+5   RP  n
+8   RP  s
+    RP  .
+    RP  \n
+233 J   jump over no condition
+
+    L
+    E   jump to yes condition if y
+
+no condition
+
+21  LP  u  upper
+11  LP  n
+12  RP  f
+17  LP  o
+4   LP  r
+15  RP  t
+10  LP  u
+4   RP  n
+3   LP  a
+9   RP  t
+14  LP  e
+17  RP  .
+    RP  \n
+3   RP  b  upper
+17  LP  u
+10  RP  t
+8   RP  ,
+21  LP
+13  RP  t
+9   RP  h
+16  LP  i
+9   RP  s
+15  LP
+5   RP  w
+    RP  i
+8   R
+2   P   ll
+14  LP
+22  RP  h
+23  LP  e
+15  RP  l
+9   RP  p
+    RP  :
+7   LP  \n
+    RP  u  upper
+7   RP  n  upper
+    RP  q
+13  LP  t
+14  RP  b
+    RP  four
+    RP  v  upper
+22  LP  n
+23  RP  m  upper
+    RP  r  upper
+28  LP  u
+29  RP  v
+18  LP  l
+13  LP  y
+28  RP  v  upper
+4   RP  two
+31  LP  o
+16  RP  u  upper
+11  LP  n
+23  RP  m  upper
+32  LP  r
+36  RP  d
+35  LP  e
+36  RP  nine
+28  LP  n
+29  RP  six
+9   LP  b
+16  LP  c  upper
+25  RP  six
+    LP  nine
+2   RP  e  upper
+15  LP  h
+5   LP  \n

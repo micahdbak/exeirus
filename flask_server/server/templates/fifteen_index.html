@@ -176,7 +176,7 @@ function check_completion () {
 	
 	const data = { left : moves, check : idiot };
 	
-	fetch("/fifteen", {
+	fetch("/{{ url }}", {
 		headers : {
 			'Content-Type' : 'application/json'
 		},

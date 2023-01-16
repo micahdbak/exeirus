@@ -20,25 +20,48 @@ int contains(char *arr, char c)
 	return *arr == c;
 }
 
-int main(void)
+int main(int argc, char **argv)
 {
+	FILE *progfile;
 	char program[PROGRAMSIZE];
 	struct list *list, *node;
 	int c,
-	    i, j,
+	    i, j, flag,
 	    value,
 	    bstart, bi;
 
-	/*
-	for (i = 0; i < 128; ++i)
-		printf("%d: %c\n", i, i);
-	*/
-
-	c = getc(stdin);
-
-	for (i = 0; c != EOF; c = getc(stdin))
+	if (argc == 1)
 	{
-		if (!contains("><}{+-.,!|", c) && !isdigit(c))
+		fprintf(stderr, "Please provide a program file.\n");
+
+		exit(EXIT_FAILURE);
+	}
+
+	progfile = fopen(argv[1], "r");
+	
+	if (progfile == NULL)
+	{
+		fprintf(stderr, "Could not open the program file.\n");
+
+		exit(EXIT_FAILURE);
+	}
+
+	c = getc(progfile);
+
+	for (i = 0; c != EOF; c = getc(progfile))
+	{
+		/* Left
+		 * Right
+		 * Increment
+		 * Decrement
+		 * Print
+		 * Scan
+		 * Jump
+		 * Head
+		 * Tail
+		 * Equals
+		 */
+		if (!contains("LRIDPSJFE", c) && !isdigit(c))
 			continue;
 
 		program[i++] = c;
@@ -46,10 +69,7 @@ int main(void)
 
 	program[i] = '\0';
 
-	for (i = 0; program[i] != '\0'; ++i)
-		putc(program[i], stdout);
-
-	putc('\n', stdout);
+	printf("Your program is:\n%s\nThe following is program output.\n\n", program);
 
 	list = malloc(sizeof(struct list));
 	list->value = 0;
@@ -60,125 +80,99 @@ int main(void)
 
 	bstart = -1;
 
+	// an unset flag will jump to the beginning of the program
+	flag = -1;
+
 	for (i = 0; program[i] != '\0'; ++i)
 	{
-		value = 0;
+		j = 1;
 
 		if (isdigit(program[i]))
-			continue;
-
-		if (isdigit(program[i + 1]))
-			j = program[i + 1] - '0';
-		else
-			j = 1;
-
-		switch (program[i])
 		{
-		// copy right in the array
-		case '}':
-			value = node->value;
+			sscanf(&program[i], "%d", &j);
+			
+			do
+				++i;
+			while (isdigit(program[i]));
+		}
 
-			// continues into > operator, with value set
-
-		// move right in the array
-		case '>':
-			for (; j > 0; --j)
+		for (; j > 0; --j)
+			switch (program[i])
 			{
+			// move right in the array
+			case 'R':
 				if (node->next == NULL)
 				{
 					node->next = malloc(sizeof(struct list));
-					node->next->value = value;
+					node->next->value = 0;
 					node->next->next = NULL;
 					node->next->prev = node;
 				}
 
 				node = node->next;
-			}
 
-			break;
-		// copy left in the array
-		case '{':
-			value = node->value;
-
-			// continues into < operator, with value set
-
-		// move left in the array
-		case '<':
-			for (; j > 0; --j)
-			{
+				break;
+			// move left in the array
+			case 'L':
 				if (node->prev == NULL)
 				{
 					node->prev = malloc(sizeof(struct list));
-					node->prev->value = value;
+					node->prev->value = 0;
 					node->prev->next = node;
 					node->prev->prev = NULL;
 				}
 
 				node = node->prev;
+
+				break;
+			// increment the index
+			case 'I':
+				node->value++;
+
+				break;
+			// decrement the index
+			case 'D':
+				node->value--;
+
+				break;
+			// print the index
+			case 'P':
+				putc((char)node->value, stdout);
+				//printf("%d ", node->value);
+
+				break;
+			// read to the index
+			case 'S':
+				node->value = (int)getc(stdin);
+
+				break;
+			// jump over n program characters
+			case 'J':
+				i += j;
+				j = 1;
+
+				break;
+			// flag character; ignore
+			case 'F':
+				// do nothing
+
+				break;
+			// jump to flag if this node equals the next
+			case 'E':
+				if (node->value == node->next->value)
+					// move backwards until a head is met
+					do
+						--i;
+					while (i >= 0 && program[i] != 'F');
+
+				// do nothing otherwise
+
+				break;
+			default:
+				fprintf(stderr, "[ERROR] %c wasn't considered.\n", program[i]);
+
+				break;
 			}
-
-			break;
-		// increment the index
-		case '+':
-			node->value += j;
-
-			break;
-		// decrement the index
-		case '-':
-			node->value -= j;
-
-			break;
-		// print the index
-		case '.':
-			for (; j > 0; --j)
-				putc(node->value, stdout);
-				//printf("%d\n", node->value);
-
-			break;
-		// read to the index
-		case ',':
-			for (; j > 0; --j)
-				node->value = getc(stdin);
-
-			break;
-		// move backwards
-		case '!':
-			j = node->value;
-
-			i -= j;
-
-			// loop ends with i++
-			i--;
-
-			break;
-		// repeat block
-		case '|':
-			if (bstart == -1)
-			{
-				bstart = i;
-				bi = -1;
-			} else
-			if (bi == -1)
-			{
-				i = bstart;
-				bi = j - 1;
-			} else
-			if (bi == 0)
-			{
-				bstart = -1;
-
-				continue;
-			} else {
-				i = bstart;
-				--bi;
-			}
-
-			break;
-		default:
-			fprintf(stderr, "[ERROR] %c wasn't considered.\n", program[i]);
-
-			break;
-		}
 	}
 
 	return EXIT_SUCCESS;

@@ -5,12 +5,14 @@ from . import users, sudoku, fifteen
 
 SECRET_KEY     = "7NfBbChMw5Ohbi3Q8F4iaWjM5NYhgNbd"
 
-FIFTEEN_URL    = "Cm8PrJj7m302AjzBYagkSN6JwzvBtD8A"
-SUDOKU_URL     = "eBlsv2O529h3BB2faqcRayS8ZWSR03cH"
-HAMMING_URL    = "vDjD2ZVyvia2USuAMRoRcjk9IPCLPFDb"
-BRAINHECK_URL  = "aK9uRaR3IzescIs5sQd1dznoBRNQE2uV"
+ENTRY_URL      = "w5bf6OooZFPhsQ78dNxoHpr4iUMbFiGx"
+SUDOKU_URL     = "It9aD1y4k7ivJlbLxHsw04xDkfGaZFTk"
+FIFTEEN_URL    = "3OmkQIBYljHwmpSohYRodNbMg7TaW3aB"
+HAMMING_URL    = "XSFbPBiLajR1hYLbpFZ5FW3J6KAJfNU6"
+BRAINHECK_URL  = "HuvBf1XusCiOSXZWoAkD7HC5Z7H06TNp"
+COMPLETION_URL = "UNqtb4VnMRuvlyV2oUnMrde9n6bC69Eh"
 
-COMPLETION_URL = "VF5oW6oovAy8zrfGOykpwJVH0Zvymi5A"
+PORT = 3141
 
 def create_app ():
 
@@ -27,8 +29,9 @@ def create_app ():
     except OSError:
         pass
 
-    # Leaderboard
-    app.register_blueprint(users.bp)
+    @app.route(f'/{ENTRY_URL}/index.html')
+    def entry():
+        return render_template('entry.html')
 
     # Sudoku
     sudoku.sudoku(app, SUDOKU_URL, FIFTEEN_URL)
@@ -53,6 +56,5 @@ def create_app ():
 
     return app
 
-
 if __name__ == '__main__':
-    create_app().run()
+    create_app().run(host='0.0.0.0', port=PORT)
