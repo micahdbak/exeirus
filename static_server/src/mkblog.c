@@ -629,6 +629,8 @@ int main(int argc, char **argv)
 			// break loop if there are no more posts
 			break;
 	}
+
+	pnode->next = NULL;
  
 	list = sortPosts(listRaw);
 

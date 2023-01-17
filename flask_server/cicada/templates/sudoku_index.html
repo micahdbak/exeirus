@@ -146,7 +146,7 @@ function check_completion () {
 	
 	const data = { brd : sdk };
 	
-	fetch("{{ url }}", {
+	fetch(window.location.href, {
 		headers : {
 			'Content-Type' : 'application/json'
 		},

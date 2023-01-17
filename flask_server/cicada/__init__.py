@@ -28,7 +28,7 @@ def create_app ():
         pass
 
     # Entry Point
-    @app.route(f'/{ENTRY_URL}/index.html')
+    @app.route(f'/{ENTRY_URL}')
     def entry():
         return render_template('entry.html')
 

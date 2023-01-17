@@ -21,10 +21,6 @@ strcon:
 	mkdir -p $(STATIC_SERVER)/bin	# Ensure that folder for binaries exists in STATIC_SERVER
 	$(CC) $(CFLAGS) -o $(STATIC_SERVER)/bin/strcon $(STATIC_SERVER)/src/strcon.c	# Compile strcon program
 
-hamming:
-	mkdir -p $(STATIC_SERVER)/bin	# Ensure that folder for binaries exists in STATIC_SERVER
-	$(CC) $(CFLAGS) -o $(STATIC_SERVER)/bin/hamming $(STATIC_SERVER)/src/hamming.c	# Compile strcon program
-
 mkdoc:
 	mkdir -p $(STATIC_SERVER)/bin	# Ensure that folder for binaries exists in STATIC_SERVER
 	$(CC) $(CFLAGS) -o $(STATIC_SERVER)/bin/mkdoc $(STATIC_SERVER)/src/mkdoc.c	# Compile mkdoc program
@@ -82,6 +78,14 @@ sudoku:
 	g++ -std=c++11 -o $(FLASK_SERVER)/bin/sdk \
 		$(FLASK_SERVER)/src/sudoku/main.cpp   \
 		$(FLASK_SERVER)/src/sudoku/sudoku.cpp
+
+brainheck:
+	mkdir -p $(FLASK_SERVER)/bin	# Ensure that folder for binaries exists in FLASK_SERVER
+	$(CC) $(CFLAGS) -o $(FLASK_SERVER)/bin/brainheck $(FLASK_SERVER)/src/brainheck/brainheck.c	# Compile brainheck program
+
+hamming:
+	mkdir -p $(FLASK_SERVER)/bin	# Ensure that folder for binaries exists in FLASK_SERVER
+	$(CC) $(CFLAGS) -o $(FLASK_SERVER)/bin/hamming $(FLASK_SERVER)/src/hamming.c	# Compile hamming program
 
 #
 #	General recipes
