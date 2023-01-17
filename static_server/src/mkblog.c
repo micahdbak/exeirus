@@ -384,6 +384,8 @@ int main(int argc, char **argv)
 
 	for (;;)
 	{
+		pnode->id = -1;
+
 		// skip special files
 		if (strcmp(".", dirent->d_name) == 0
 		 || strcmp("..", dirent->d_name) == 0)

@@ -5,10 +5,11 @@ import copy, os, random, string
 # Main func - creates the page for the puzzle
 def fifteen (app, url, sol):
     # Run the ./bin/15_puzzle program on start, so that ./puzzle.txt exists.
-    try:
-        os.system('./bin/15_puzzle')
-    except OSError:
-        pass
+    if not os.path.exists('./puzzle.txt'):
+        try:
+            os.system('./bin/15_puzzle')
+        except OSError:
+            pass
 
 
     # Read the created ./puzzle.txt file.
@@ -39,7 +40,7 @@ def fifteen (app, url, sol):
             # Sending the message to JavaScript about validity with the link to redirect to
             return {
                 'state': rspn,
-                'link': f'/{sol}' if rspn == "Allowed" else 'https://youtu.be/P8fovVJ17GE?t=6'
+                'link': f'{sol}' if rspn == "Allowed" else 'https://youtu.be/P8fovVJ17GE?t=6'
             }
 
         return render_template('fifteen_index.html',

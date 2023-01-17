@@ -42,7 +42,7 @@ def sudoku (app, url, sol):
             if rspn == 'Solved':
                 return {
                     'state' : rspn,
-                    'link' : f'/{sol}'
+                    'link' : f'{sol}'
                 }
             else:
                 return {

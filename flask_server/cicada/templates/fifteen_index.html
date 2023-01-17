@@ -130,7 +130,7 @@ function move (dir) {
 
 	// Reduce amount of moves left and draw new version of the board
 	moves -= 1;
-	// Add current step to "gay check"
+	// Add current step to "idiot check"
 	idiot += to_str ();
 	// Since tiles have moved - check completion state that also redraws them
 	check_completion ();
@@ -189,10 +189,13 @@ function check_completion () {
 			.then(function (response) {
 				if (response.state != "Declined") {
 					solved = true;
-					draw_puzzle (response.link);
+					console.log(response.link);
+
+					draw_puzzle ();
 				}
 				else {
 					console.log("Try again, sweaty");
+					window.open(response.link);
 					
 					layout = [...orig_layout];
 					moves = orig_moves;
@@ -206,8 +209,6 @@ function check_completion () {
 					
 					draw_puzzle ();
 				}
-				
-				window.open(response.link);
 			});
 		}
 		else {
@@ -223,7 +224,9 @@ function check_completion () {
 // Main function - draws the current state of the puzzle
 function draw_puzzle (to_print = moves + " moves left.") {
 	// If user has no moves left - return to original state
-	if (!solved && moves <= 0) {
+	if (solved) {
+		to_print = "Well done.";
+	} else if (moves <= 0) {
 		layout = [...orig_layout];
 		moves = orig_moves;
 		idiot = to_str ();
