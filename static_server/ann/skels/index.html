@@ -1,0 +1,23 @@
+<!doctype html>
+<html>
+	<head>
+		<title>$ANNTITLE$</title>
+		<link rel="stylesheet" href="$DOMAIN$/$ANN$/static/ann.css">
+		<link rel="icon" type="image/svg" href="$DOMAIN$/$ANN$/static/icon.svg">
+	</head>
+	<body>
+		<div class="page">
+			<h1 class="title"><img src="$DOMAIN$/$ANN$/static/speaker.svg"> $ANNNAME$</h1>
+			<hr>
+			<h4>Announcements are sorted from newest to oldest.</h4>#{
+			<h2>#D</h2>#(
+			<div class="ann" style="display: flex; justify-content: space-between; align-items: center;">
+				<h2>(#i)</h2>
+				<h3>#t <span class="author">from #a</span></h3>
+				<div class="button">
+					<a href="$DOMAIN$/$ANN$/#f.html">Read</a>
+				</div>
+			</div>#)#}
+		</div>
+	</body>
+</html>

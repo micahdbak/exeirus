@@ -191,9 +191,16 @@ struct list *pushTree(struct tree *tnode, struct list *lnode)
 	if (tnode == NULL)
 		return lnode;
 
+	/* oldest -> newest sorting
 	lnode = pushTree(tnode->lth, lnode);
 	lnode = pushPost(tnode->post, lnode);
 	lnode = pushTree(tnode->gth, lnode);
+	*/
+
+	// newest -> oldest sorting
+	lnode = pushTree(tnode->gth, lnode);
+	lnode = pushPost(tnode->post, lnode);
+	lnode = pushTree(tnode->lth, lnode);
 
 	return lnode;
 }

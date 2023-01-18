@@ -5,8 +5,9 @@ FLASK_SERVER  = ./flask_server
 STATIC_SERVER = ./static_server
 
 STATIC_HTDOCS = $(STATIC_SERVER)/htdocs
-STATIC_BLOG = $(STATIC_HTDOCS)/journal
-STATIC_TELE = $(STATIC_HTDOCS)/noustele
+STATIC_BLOG   = $(STATIC_HTDOCS)/journal
+STATIC_TELE   = $(STATIC_HTDOCS)/noustele
+STATIC_ANN    = $(STATIC_HTDOCS)/announcements
 
 
 #
@@ -57,6 +58,22 @@ static_tele: mkblog mkdoc
 		-s $(STATIC_SERVER)/tele/docs \
 		-d $(STATIC_TELE)
 
+static_ann: mkblog mkdoc
+	mkdir -p $(STATIC_SERVER)/ann/docs	# Ensure that directory for ann mkdoc files exists
+	# Compile ann documents for parsing through mkdoc
+	$(STATIC_SERVER)/bin/mkblog \
+		-p $(STATIC_SERVER)/ann/posts \
+		-d $(STATIC_SERVER)/ann/docs \
+		-s $(STATIC_SERVER)/ann/skels/post.html \
+		-i $(STATIC_SERVER)/ann/skels/index.html
+	# Parse ann documents through mkdoc and write to htdocs
+	$(STATIC_SERVER)/bin/mkdoc \
+		-c $(STATIC_SERVER)/mkdoc.vars \
+		-s $(STATIC_SERVER)/ann/docs \
+		-d $(STATIC_ANN)
+
+
+
 static_server: static_blog static_tele
 
 
@@ -86,6 +103,8 @@ brainheck:
 hamming:
 	mkdir -p $(FLASK_SERVER)/bin	# Ensure that folder for binaries exists in FLASK_SERVER
 	$(CC) $(CFLAGS) -o $(FLASK_SERVER)/bin/hamming $(FLASK_SERVER)/src/hamming.c	# Compile hamming program
+
+flask_server: 15_puzzle sudoku brainheck hamming
 
 #
 #	General recipes

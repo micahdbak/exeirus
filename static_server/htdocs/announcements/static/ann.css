@@ -1,0 +1,75 @@
+body {
+	padding: 0px;
+	background-color: #202020;
+	color: white;
+	font-family: sans-serif;
+}
+h1.title {
+	text-align: center;
+	font-size: 24pt;
+	font-weight: normal;
+}
+h1.title img {
+	display: inline;
+	width: 40px;
+	height: 40px;
+}
+h1 {
+	color: #ffffff;
+	font-size: 20pt;
+	font-weight: normal;
+}
+h2 {
+	color: #c0c0c0;
+	font-size: 16pt;
+	font-weight: bold;
+}
+h3 {
+	font-size: 14pt;
+	font-weight: normal;
+}
+h4 {
+	color: #808080;
+	font-size: 12pt;
+	font-weight: bold;
+}
+hr {
+	margin-top: 16px;
+	margin-bottom: 16px;
+	border: none;
+	border-bottom: 1px solid #404040;
+}
+.page {
+	margin: auto;
+	padding: 32px;
+	max-width: 768px;
+}
+.ann {
+	margin-bottom: 8px;
+	border: 1px solid #606060;
+	padding: 8px;
+	padding-left: 16px;
+	padding-right: 16px;
+	background-color: #242424;
+}
+.ann span.author {
+	color: #a0a0a0;
+}
+.button {
+	display: inline-block;
+	margin: 2px;
+	border: 1px solid #505050;
+	border-radius: 8px;
+	padding: 16px;
+	background-color: #404040;
+	line-height: 0;
+}
+.button:hover {
+	border: 1px solid #808080;
+	background-color: #606060;
+}
+.button a {
+	color: white;
+	text-decoration: none;
+	font-weight: bold;
+}
