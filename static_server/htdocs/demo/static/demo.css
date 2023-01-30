@@ -1,0 +1,27 @@
+body {
+	background-color: black;
+	color: white;
+	font-family: monospace;
+}
+.page {
+	margin: auto;
+	margin-top: 64px;
+	max-width: 256px;
+}
+.page img {
+	display: block;
+	margin: auto;
+	width: 128px;
+}
+.page p.title {
+	color: #c0c0c0;
+}
+.page p.title b {
+	color: #ffffff;
+}
+.page p.hint {
+	color: #808080;
+}
+.page p.cipher {
+	color: #80ff80;
+}

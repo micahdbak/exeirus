@@ -3,3 +3,4 @@ bin/
 
 
 htdocs/**/*.html
+!htdocs/demo/index.html

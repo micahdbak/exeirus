@@ -74,7 +74,7 @@ static_ann: mkblog mkdoc
 
 
 
-static_server: static_blog static_tele
+static_server: static_blog static_tele static_ann
 
 
 #

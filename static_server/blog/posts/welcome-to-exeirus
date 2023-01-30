@@ -1,0 +1,112 @@
+Welcome to $EXEIRUS$. <span class="important">IMPORTANT</span>
+C555
+0 23 1 2023
+<img style="width: 256px;" src="$DOMAIN$/$BLOG$/static/exeirus.png">
+\P
+Well done, applicant.
+\P
+We are EXEIRUS.
+To start your application, read forth.
+\P
+The time is now to stop CICADA.
+And we need your help.
+This journal contains several hidden puzzles that,
+upon completion, will lead you to CICADA.
+We will keep track of which hackers are making progress at the fastest rate,
+given you communicate to us your progress.
+This journal has puzzles strewn throughout it.
+It is likewise with \(iNous\)iTele, that preceding website.
+Look closely; keep your brows furrowed.
+To complete every puzzle is to complete your application.
+\P
+There is an entry-point that you will use to access
+CICADA's secret communication channels.
+We have heavily encrypted this entry-point using our \(bmaster-key\)b.
+To decrypt the entry-point, you will need that \(bmaster-key\)b.
+Completing every puzzle in my journal will give you this.
+There are \(bkeys\)b everywhere, which, in totality, create the \(bmaster-key\)b.
+These \(bkeys\)b are hidden in every puzzle, in nearly every page.
+\P
+A \(bkey\)b looks something like this, when it is found:
+\P
+\(m
+1:abcdefgh
+\)m
+<!--
+Your wit is yet to be rewarded.
+
+Behold, a key:
+
+7:zoizymce
+
+                  _                 ___ ____ ____ ____  
+  /\\  /\\__ _  ___| | _____ _ __    / __\\ ___| ___| ___| 
+ / /_/ / _` |/ __| |/ / _ \\ '__|  / /  |___ \\___ \\___ \\ 
+/ __  / (_| | (__|   <  __/ |    / /___ ___) |__) |__) |
+\\/ /_/ \\__,_|\\___|_|\\_\\___|_|    \\____/|____/____/____/ 
+                                                        
+-->
+\P
+But a \(bkey\)b might not look like that initially.
+It is probably the plaintext of a cipher,
+or perhaps the solution to something else.
+\P
+The leading number of a \(bkey\)b is the position of that key in the \(bmaster-key\)b.
+The characters following the colon is the content of the \(bkey\)b itself.
+\P
+Suppose that you have found the following \(bkeys\)b:
+\P
+\(m
+<span style="color:#4aa">1:abcdefgh</span>
+<span style="color:#f44">2:ijklmnop</span>
+<span style="color:#4f4">3:qrstuvwx</span>
+<span style="color:#44f">4:yzabcdef</span>
+\)m
+\P
+Then the \(bmaster-key\)b is found by combining these \(bkeys\)b like so:
+\P
+\(m
+<span style="color:#4aa">abcdefgh<span style="color:#f44">ijklmnop</span><span style="color:#4f4">qrstuvwx</span><span style="color:#44f">yzabcdef</span>
+\)m
+\P
+The example \(bkeys\)b shown above are unlike real keys in that they follow a pattern.
+Real \(bkeys\)b' content are completely random.
+\P
+Once you have found the \(bmaster-key\)b and broken our encryption,
+you will be able to tackle CICADA head-on.
+\P
+Every CICADA web-page is found under $DOMAIN$/cicada.
+As soon as you are able to access one of CICADA's pages,
+\(bcommunicate to us the entire URL of the page you reached\)b.
+These URLs should be communicated to us as soon as you access them
+such that we can allot points to each hacker.
+To communicate these URLs,
+\(bsend each URL as a message to \(bC555#4713\)b on Discord\)b.
+The timestamp of your message will be used to calculate the points rewarded.
+To reiterate,
+you must send to \(bC555#4713\)b on Discord each CICADA URL
+that you access such that you are given the points you deserve.
+\P
+For each URL of CICADA's, points are given to hackers in decreasing order.
+That is, the first hacker to reach a CICADA URL will get, say, n points.
+The hackers following will receive a decreased number of points,
+decreasing by some constant, say, a, for each hacker.
+For example, the second hacker will get n - a points, and the third, n - 2a points.
+And so on and so forth.
+Points are awarded as such for each individual CICADA page,
+and a hacker's final score is the sum of each individual score.
+A leaderboard will be lazily updated to display hacker's scores,
+which can be found here: \(a$DOMAIN$/announcements/index.html\)a.
+\P
+Hackers are encouraged to collaborate and discuss puzzles with other hackers.
+Outright sharing of solutions and URLs is not permitted,
+and will result in a hacker being removed from the game entirely.
+However, guiding another hacker through the process of solving a puzzle,
+explaining steps carefully, is allowed.
+\P
+All manner of puzzles are before you.\n
+Think outside of the box.\n
+\(iNothing is as it seems.\)i\n
+You will need to employ abnormal strategies on several occasions.
+\P
+Good luck.

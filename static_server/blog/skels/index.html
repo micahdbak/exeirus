@@ -3,31 +3,29 @@
 <head>
 	<title>$BLOGTITLE$ - #t By #a</title>
 	<link rel="stylesheet" href="$DOMAIN$/$BLOG$/static/blog.css">
-	<link rel="icon" type="image/png" href="$DOMAIN$/$BLOG$/static/wasp.png">
+	<link rel="icon" type="image/svg" href="$DOMAIN$/$BLOG$/static/C555.svg">
 </head>
 <body>
 	<div class="page">
 		<div class="header">
-			<table>
-				<tr>
-					<th class="icon">
-						<img src="$DOMAIN$/$BLOG$/static/wasp.png">
-					</th>
-					<th>
-						<h1>$BLOGNAME$</h1>
-						<h2>$BLOGTAG$</h2>
-					</th>
-				</tr>
-			</table>
+			<img src="$DOMAIN$/$BLOG$/static/C555.svg">
+			<img src="$DOMAIN$/$BLOG$/static/banner.svg">
 		</div>
 		<div class="listing">
-			<h1>The following are available posts.</h1>
-			<h2>Sort Mode: Newest to Oldest</h2>#{
+			<h1>Welcome to $BLOGNAME$: $BLOGTAG$</h1>
+			<p>This is the exclusive hacker journal for the $EXEIRUS$ group of hackers.</p>
+			<hr>
+			<h2>The following are available posts.</h2>
+			<h3>Sort Mode: Newest to Oldest</h3>#{
 			<div class="group">
-				<p>Posted On #D</p>#(
-				<div class="post">
-					<p>(#i) <i>#t</i> by <b>Hacker #a</b>. <a href="$DOMAIN$/$BLOG$/#f.html">Open Post</a></p>
-				</div>#)
+				<h2>Posted On #D</h2>#(
+				<p>
+					<a href="$DOMAIN$/$BLOG$/#f.html">Open Post</a>
+					(#i)
+					<i>#t</i>
+					by <b>Hacker #a</b>
+				</p>
+				#)
 			</div>#}
 		</div>
 		<div class="footer">

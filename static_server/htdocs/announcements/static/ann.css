@@ -8,6 +8,7 @@ h1.title {
 	text-align: center;
 	font-size: 24pt;
 	font-weight: normal;
+	line-height: 0;
 }
 h1.title img {
 	display: inline;
@@ -18,6 +19,11 @@ h1 {
 	color: #ffffff;
 	font-size: 20pt;
 	font-weight: normal;
+}
+h2.title {
+	margin-bottom: 32px;
+	text-align: center;
+	line-height: 0;
 }
 h2 {
 	color: #c0c0c0;
@@ -43,6 +49,14 @@ hr {
 	margin: auto;
 	padding: 32px;
 	max-width: 768px;
+}
+.page iframe {
+	display: block;
+	overflow-x: hidden;
+	margin: auto;
+	border: 0;
+	width: 512px;
+	height: 128px;
 }
 .ann {
 	margin-bottom: 8px;
