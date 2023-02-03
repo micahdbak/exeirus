@@ -2,18 +2,10 @@
 
 ## Description
 
-"This is a game. Complete it, and you will be rewarded.
-You will come across a great many puzzles.
-By solving a puzzle, your solution will guide you to the next puzzle.
-But do not rush, for every puzzle contains something else that is vital to this game's completion.
-Keep an eye out for things that look awry, because there are keys hidden in every puzzle, in nearly every page. ..." (from index.html)
+This game consists of a series of cryptographic puzzles, riddles, and internet oddities.
+You will need to think outside of the box to find secret codes hidden in webpages, and ciphers.
 
-EXEIRUS is an ARG (Alternative Reality Game) created for the Simon Fraser University's Computing Science Student Society.
-
-The game consists of puzzles that must be completed in sequential order, each puzzle providing a key.
-When every puzzle is completed, these keys can be combined to create a master-key.
-This master-key is part of the URL of the completion page.
-Finding this completion page ends the game, and thus whoever gets there first is declared the winner.
+EXEIRUS is an Alternative Reality Game created for the Simon Fraser University's Computing Science Student Society.
 
 ## Installing
 
@@ -25,9 +17,11 @@ and there is a Python flask server which is dedicated to the CICADA hackers.
 
 There are no dependencies for compiling the static server,
 except a C compiler, and, of course, the standard C library.
-This is because specially written C programs assist in the repetitive aspects of the static server,
-such as generating templated websites (``mkblog``), or replacing variable fields (``mkdoc``).
-Additionally, there is a handy program which generates a random string of a specified length and specified base (``strgen``).
+There are programs written to support the static server,
+such as templated blogs (``mkblog``),
+or managing variable fields in documents (``mkdoc``).
+Additional programs include ``strgen``, and ``strcon``,
+which help with managing encrypted text.
 
 To create the static HTML file tree, simply run
 
@@ -35,26 +29,30 @@ To create the static HTML file tree, simply run
 make static_server
 ```
 
-The previously mentioned programs will be compiled and written to ``static_server/bin`` for further use.
+The previously mentioned programs will be compiled to ``static_server/bin``.
 
-Additionally, if you intend to compile certain parts of the static server,
-such as C555's journal or NousTele, you can run the following commands, respectively:
+The several programs mentioned above will compile the HTML documents of the static server to ``static_server/htdocs``.
+
+If you intend to compile certain parts of the static server,
+such as C555's journal, NousTele, or the Announcements,
+you can run the following commands, respectively:
 
 ```
 make static_blog
 make static_tele
+make static_ann
 ```
 
 ### The Flask Server
 
 #### Dependencies
 
-To install and run the Flask server, you will need to install Flask.
-To do this, ensure that Python, the Python ``venv`` module, and the Python ``pip`` package-manager are installed.
+To install and run the flask server, you will need to install ``Flask``.
+To do this, ensure that python, the python ``venv`` module, and the python ``pip`` package-manager are installed.
 
 The ``venv`` module is used to create a virtual-environment where all dependencies will be stored.
 
-The ``pip`` package-manager is used to install Flask.
+The ``pip`` package-manager is used to install ``Flask`` and other dependencies.
 
 To install these in Ubuntu:
 
@@ -68,7 +66,8 @@ To install these in MacOS (using Homebrew):
 brew install python3 python3-pip python3-venv
 ```
 
-Once Python, ``pip``, and ``venv`` are installed, you must create the virtual environment where we will store Flask.
+Once python, ``pip``, and ``venv`` are installed,
+you must create the virtual environment that will store installed ``pip`` packages.
 
 To do this, ``cd`` into ``flask_server``, and create the virtual-environment:
 
@@ -77,9 +76,9 @@ cd ./flask_server
 python3 -m venv ./venv
 ```
 
-This will create a folder in ``flask_server`` called ``venv`` that will store Flask.
+This will create a folder in ``flask_server`` called ``venv``.
 
-Then, enter this virtual environment:
+Then, activate this virtual-environment:
 
 ```
 . ./venv/bin/activate
@@ -87,14 +86,37 @@ Then, enter this virtual environment:
 
 Your shell prompt should look a little different now.
 
-Next, we can install Flask:
+Next, we can prepare the virtual environment with dependencies:
 
 ```
-pip install Flask
+pip install --upgrade pip Flask gunicorn
 ```
+
+This updates the ``pip`` package manager, and installs the ``Flask`` package which handles the flask server code.
+``gunicorn`` is a web server gateway interface that allows the flask server to be proxied through a web server, such as nginx.
 
 Now, all of the dependencies for running the flask server are installed.
-Whenever you intend to work on the flask server, you should enter the virtual environment.
+
+To run the flask server, you can run for debug or development purposes:
+
+```
+flask --debug --app cicada run
+```
+
+For production, you must install ``cicada`` as a python package so it is accessible by ``gunicorn``.
+To do so, install it with ``pip``:
+
+```
+pip install -e ./cicada
+```
+
+Now start ``cicada``, using ``gunicorn``:
+
+```
+gunicorn -w 4 "cicada:create_app()"
+```
+
+The port that ``gunicorn`` is serving ``cicada`` on should be visible in the console output.
 
 To leave the virtual environment, simply type ``deactivate`` into your shell:
 
