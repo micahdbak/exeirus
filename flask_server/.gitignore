@@ -1,5 +1,7 @@
 bin/
 venv/
+build/
+dist/
 *.egg-info/
 
 *.pyc

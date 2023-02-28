@@ -69,6 +69,9 @@ hr {
 .ann span.author {
 	color: #a0a0a0;
 }
+.ann h2 {
+	font-weight: normal;
+}
 .button {
 	display: inline-block;
 	margin: 2px;

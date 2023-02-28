@@ -611,6 +611,10 @@ int main(int argc, char **argv)
 					}
 
 					break;
+				default:
+					putc(c, dest);
+
+					break;
 				}
 			} else
 				/* This is not a special character. Simply

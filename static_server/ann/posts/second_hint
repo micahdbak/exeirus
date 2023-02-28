@@ -1,0 +1,21 @@
+Second Hint
+C555
+0 5 2 2023
+Greetings, Hackers,
+\P
+Your second hint is as follows:
+\P
+There are eight keys that make up the master-key.
+With the master-key, you must <i>unlock</i> a larger cipher than those you decrypted thus far.
+This cipher is an encrypted <i>entry-point</i>.
+It is only after you break the encryption on this entry-point that you can access CICADA's servers.
+\P
+There are two blocks that you must decipher.
+One is visible, the other is hidden.
+To decipher the second, you must decipher the first.
+\P
+You have all that you need to decipher these blocks;
+look back to the methods you have used,
+and follow your intuition.
+\P
+Happy hacking.
